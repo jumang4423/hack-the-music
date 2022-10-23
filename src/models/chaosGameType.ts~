@@ -1,0 +1,14 @@
+export type ChaosGameSettingsType = {
+  randomTheme: {
+    enabled: boolean;
+    wordIndexes: Array<number>;
+  };
+  randomSamples: {
+    enabled: boolean;
+    sampleIndexes: Array<number>;
+  };
+  lifeSoundSampling: {
+    enabled: boolean;
+    generativeId: number;
+  };
+};

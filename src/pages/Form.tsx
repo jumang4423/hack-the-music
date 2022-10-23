@@ -1,0 +1,109 @@
+import { Group } from "./App";
+import { useState, useEffect } from "react";
+import { Input } from "@mui/material";
+import { ColorObj } from "../models/color";
+import { useQuery } from "@apollo/client";
+import { GET_GROUP } from "../fun/apis";
+
+type Props = {
+  setGroup: (group: Group) => void;
+  setModalOpen: (open: boolean) => void;
+};
+
+const Form = ({ setGroup, setModalOpen }: Props) => {
+  type formType = {
+    groupIdBox: string;
+    groupIdBoxError: boolean;
+  };
+  const [formData, setFormData] = useState<formType>({
+    groupIdBox: "",
+    groupIdBoxError: false,
+  });
+
+  const { data, loading, error, refetch } = useQuery(GET_GROUP);
+
+  useEffect(() => {
+    if (data) {
+      const group = data.group;
+      setGroup(group);
+      // navigate
+      setModalOpen(false);
+    }
+  }, [data]);
+
+  const onJoingroup = () => {
+    // check group id is not empty
+    setFormData({
+      ...formData,
+      groupIdBoxError: formData.groupIdBox === "",
+    });
+    if (formData.groupIdBox === "") {
+      return;
+    }
+
+    // mutate
+    try {
+      refetch({
+        groupId: formData.groupIdBox,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return (
+    <div>
+      <h1
+        style={{
+          color: ColorObj.black,
+          marginBottom: "16px",
+        }}
+      >
+        # make-some-nice
+      </h1>
+      <div className="card">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Input
+            value={formData.groupIdBox}
+            autoFocus={true}
+            error={formData.groupIdBoxError}
+            placeholder="group id"
+            color="primary"
+            onChange={(e) => {
+              setFormData({ ...formData, groupIdBox: e.target.value });
+            }}
+          />
+          <button
+            style={{
+              marginLeft: "1rem",
+              marginRight: "1rem",
+            }}
+            onClick={onJoingroup}
+          >
+            {loading ? "loading..." : "join"}
+          </button>
+        </div>
+        <p
+          style={{
+            cursor: "pointer",
+            color: ColorObj.black,
+          }}
+          onClick={() => {
+            setModalOpen(true);
+          }}
+        >
+          {"->"} or create a new group
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Form;
