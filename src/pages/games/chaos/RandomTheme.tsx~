@@ -2,7 +2,10 @@ import { ChaosGameSettingsType } from "../../../models/chaosGameType";
 import Spacer from "../../../components/Spacer";
 import { FormControlLabel } from "@mui/material";
 import { Checkbox } from "@mui/material";
-import { RandomThemeEanbleCheckboxHandleChange } from "./fun_RandomTheme";
+import {
+  RandomThemeEanbleCheckboxHandleChange,
+  RandomThemeManuallyAddButtonHandleClick,
+} from "./fun_RandomTheme";
 import { Button } from "@mui/material";
 
 type Props = {
@@ -48,17 +51,17 @@ const RandomTheme = ({ gameSettings, setGameSettings }: Props) => {
       >
         <div
           style={{
-            width: "50%",
+            margin: "8px",
           }}
         >
-          <Button variant="outlined">add theme</Button>
+          <Button variant="outlined">＋ manually add</Button>
         </div>
         <div
           style={{
-            width: "50%",
+            margin: "8px",
           }}
         >
-          <Button variant="contained">random theme</Button>
+          <Button variant="contained">🌏 random</Button>
         </div>
       </div>
     </div>

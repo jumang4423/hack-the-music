@@ -22,7 +22,6 @@ export const RandomeThemeManuallyAddButtonHandleClick = (
     name: "",
     description: null,
   });
-
   setGameSettings(newGameSettings);
 
   return void 0;

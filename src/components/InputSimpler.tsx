@@ -7,6 +7,8 @@ type Props = {
   autoFocus?: boolean;
   onChange?: any;
   error?: boolean;
+  fullWidth?: boolean;
+  placeholder?: string;
 };
 
 const InputSimpler: React.FC<Props> = ({
@@ -16,6 +18,8 @@ const InputSimpler: React.FC<Props> = ({
   autoFocus = false,
   onChange = () => {},
   error = false,
+  fullWidth = false,
+  placeholder = "",
 }) => {
   return (
     <div
@@ -38,7 +42,12 @@ const InputSimpler: React.FC<Props> = ({
         error={error}
         value={value}
         color="primary"
+        fullWidth={fullWidth}
+        placeholder={placeholder}
         onChange={onChange}
+        sx={{
+          FontFamily: "IoSevka",
+        }}
       />
     </div>
   );

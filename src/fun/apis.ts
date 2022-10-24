@@ -19,3 +19,13 @@ export const INSERT_GROUP = gql`
     }
   }
 `;
+
+export const GET_RANDOM_THEME = gql`
+  mutation GetRandomTheme {
+    randomTheme {
+      themeIndex
+      content
+      description
+    }
+  }
+`;

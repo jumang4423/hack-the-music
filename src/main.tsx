@@ -26,11 +26,11 @@ const stringSchema = gql`
 
   type Query {
     group(groupId: String!): Group
-    randomTheme: Theme
   }
 
   type Mutation {
     insertGroup(groupId: String!, name: String!, gameMode: Int!): Group
+    randomTheme: Theme
   }
 `;
 
@@ -46,11 +46,6 @@ const schemaWithMocks = addMocksToSchema({
           gameMode: 0,
         };
       },
-      randomTheme: () => {
-        const ramdomlySelectedTheme: Theme =
-          ThemeBankMock[Math.floor(Math.random() * ThemeBankMock.length)];
-        return ramdomlySelectedTheme;
-      },
     }),
     Mutation: () => ({
       insertGroup: () => {
@@ -59,6 +54,11 @@ const schemaWithMocks = addMocksToSchema({
           name: "test",
           gameMode: 0,
         };
+      },
+      randomTheme: () => {
+        const ramdomlySelectedTheme: Theme =
+          ThemeBankMock[Math.floor(Math.random() * ThemeBankMock.length)];
+        return ramdomlySelectedTheme;
       },
     }),
   },

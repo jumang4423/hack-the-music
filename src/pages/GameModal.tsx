@@ -1,5 +1,4 @@
-import { SwipeableDrawer } from "@mui/material";
-import InputSimpler from "../components/InputSimpler";
+import { Drawer } from "@mui/material";
 import { ColorObj } from "../models/color";
 import { GameModeEnum } from "../models/gameMode";
 import { Group } from "./App";
@@ -29,12 +28,15 @@ const GameModal: React.FC<Props> = ({
     },
   };
 
+  if (!modalOpen) {
+    return <></>;
+  }
+
   return (
-    <SwipeableDrawer
+    <Drawer
       anchor={"bottom"}
       open={modalOpen}
       onClose={() => setModalOpen(false)}
-      onOpen={() => {}}
     >
       <div
         style={{
@@ -69,7 +71,7 @@ const GameModal: React.FC<Props> = ({
         </div>
       </div>
       <div style={{ height: "100vh" }} />
-    </SwipeableDrawer>
+    </Drawer>
   );
 };
 

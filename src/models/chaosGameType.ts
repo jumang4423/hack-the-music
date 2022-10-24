@@ -1,5 +1,4 @@
 import { Theme } from "../fun_main";
-
 export type ChaosGameSettingsType = {
   randomTheme: {
     enabled: boolean;
