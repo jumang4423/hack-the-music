@@ -23,9 +23,19 @@ export const INSERT_GROUP = gql`
 export const GET_RANDOM_THEME = gql`
   mutation GetRandomTheme {
     randomTheme {
-      themeIndex
       content
       description
+      idUploadedBy
+    }
+  }
+`;
+
+export const GET_RANDOM_SAMPLE = gql`
+  mutation GetRandomSample {
+    randomSample {
+      url
+      description
+      idUploadedBy
     }
   }
 `;

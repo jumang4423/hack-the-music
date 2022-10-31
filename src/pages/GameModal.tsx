@@ -3,6 +3,10 @@ import { ColorObj } from "../models/color";
 import { GameModeEnum } from "../models/gameMode";
 import { Group } from "./App";
 import ChaosModeGame from "./games/chaos/ChaosModeGame";
+import { ChaosGameSettingsType } from "../models/chaosGameType";
+import { useState } from "react";
+import TimeLimitBox from "./games/TimeLimitBox";
+import { Button } from "@mui/material";
 
 type Props = {
   modalOpen: boolean;
@@ -17,20 +21,46 @@ const GameModal: React.FC<Props> = ({
   group,
   setGroup,
 }) => {
+  const [gameSettings, setGameSettings] = useState<ChaosGameSettingsType>({
+    randomTheme: {
+      enabled: true,
+      themes: [],
+    },
+    randomSamples: {
+      enabled: true,
+      samples: [],
+    },
+    lifeSoundSampling: {
+      enabled: false,
+      generativeId: 0,
+    },
+    sceneIndex: 0,
+    timeLimitMin: 30,
+  });
+  const refresh = () => {
+    window.location.reload();
+  };
   const viewState = {
     gameComponentSelector: (gameMode: GameModeEnum) => {
+      if (!modalOpen) {
+        return <></>;
+      }
+
       switch (gameMode) {
         case GameModeEnum.chaos:
-          return <ChaosModeGame group={group} setGroup={setGroup} />;
+          return (
+            <ChaosModeGame
+              group={group}
+              setGroup={setGroup}
+              gameSettings={gameSettings}
+              setGameSettings={setGameSettings}
+            />
+          );
         default:
           return <div>Game not found</div>;
       }
     },
   };
-
-  if (!modalOpen) {
-    return <></>;
-  }
 
   return (
     <Drawer
@@ -67,6 +97,33 @@ const GameModal: React.FC<Props> = ({
             <h3 style={{ color: ColorObj.gray }}>group id: {group.groupId}</h3>
 
             {viewState.gameComponentSelector(group.gameMode)}
+            <TimeLimitBox
+              gameSettings={gameSettings}
+              setGameSettings={setGameSettings}
+            />
+
+            <hr style={{ width: "100%", marginTop: "2rem" }} />
+
+            <div
+              style={{
+                marginTop: "2rem",
+                width: "100%",
+                display: "flex",
+                right: 0,
+                justifyContent: "flex-end",
+              }}
+            >
+              <Button
+                variant="outlined"
+                sx={{ marginRight: "16px" }}
+                onClick={() => {
+                  refresh();
+                }}
+              >
+                back
+              </Button>
+              <Button variant="contained">start</Button>
+            </div>
           </div>
         </div>
       </div>

@@ -1,0 +1,13 @@
+import ErrStr from "../domain/ErrStr.domain";
+import { Sample } from "../generated/graphql";
+import { FireStoreApp } from "./firebase.drivers";
+import { doc, setDoc } from "firebase/firestore";
+
+export const GetRandomThemeDriver = async (length: number): Promise<Theme> => {
+  const db = FireStoreApp;
+
+  try {
+  } catch (e: unknown) {
+    return [null, new ErrStr({ isErr: true, errStr: (e as Error).message })];
+  }
+};

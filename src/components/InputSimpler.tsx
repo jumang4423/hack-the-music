@@ -1,18 +1,21 @@
 import { Input } from "@mui/material";
+import { Box } from "@mui/system";
 
 type Props = {
   disabled?: boolean;
   title: string;
-  value: string;
+  value: string | number;
   autoFocus?: boolean;
   onChange?: any;
   error?: boolean;
   fullWidth?: boolean;
   placeholder?: string;
+  type?: string;
 };
 
 const InputSimpler: React.FC<Props> = ({
   disabled = false,
+
   value,
   title,
   autoFocus = false,
@@ -20,6 +23,7 @@ const InputSimpler: React.FC<Props> = ({
   error = false,
   fullWidth = false,
   placeholder = "",
+  type = "text",
 }) => {
   return (
     <div
@@ -27,6 +31,7 @@ const InputSimpler: React.FC<Props> = ({
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
+        width: "100%",
       }}
     >
       <h3
@@ -36,19 +41,19 @@ const InputSimpler: React.FC<Props> = ({
       >
         {title}
       </h3>
-      <Input
-        autoFocus={autoFocus}
-        disabled={disabled}
-        error={error}
-        value={value}
-        color="primary"
-        fullWidth={fullWidth}
-        placeholder={placeholder}
-        onChange={onChange}
-        sx={{
-          FontFamily: "IoSevka",
-        }}
-      />
+      <Box sx={{ width: 0.8 }}>
+        <Input
+          autoFocus={autoFocus}
+          disabled={disabled}
+          error={error}
+          value={value}
+          color="primary"
+          fullWidth={fullWidth}
+          placeholder={placeholder}
+          onChange={onChange}
+          type={type}
+        />
+      </Box>
     </div>
   );
 };

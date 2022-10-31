@@ -1,4 +1,4 @@
-import { Theme } from "../fun_main";
+import { Theme, Sample } from "../gql/graphql";
 export type ChaosGameSettingsType = {
   randomTheme: {
     enabled: boolean;
@@ -6,11 +6,12 @@ export type ChaosGameSettingsType = {
   };
   randomSamples: {
     enabled: boolean;
-    sampleIndexes: Array<number>;
+    samples: Array<Sample>;
   };
   lifeSoundSampling: {
     enabled: boolean;
     generativeId: number;
   };
   sceneIndex: number;
+  timeLimitMin: number;
 };

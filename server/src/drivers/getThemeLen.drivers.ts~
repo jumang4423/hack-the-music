@@ -1,0 +1,20 @@
+import ErrStr from "../domain/ErrStr.domain";
+import { FireStoreApp } from "./firebase.drivers";
+import { collection, getCountFromServer } from "firebase/firestore";
+
+export const GetCollLenDriver = async (
+  collectionTreeArr: Array<string>
+): Promise<[number, ErrStr]> => {
+  const db = FireStoreApp;
+
+  try {
+    // get the length of themes document
+    const collectionRef = collection(db, ...collectionTreeArr);
+    const snapshot = await getCountFromServer(collectionRef);
+    const len = snapshot.data().count;
+
+    return [len, new ErrStr({ isErr: false })];
+  } catch (e: unknown) {
+    return [-1, new ErrStr({ isErr: true, errStr: (e as Error).message })];
+  }
+};

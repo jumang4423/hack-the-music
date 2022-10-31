@@ -5,14 +5,8 @@ import { Tab } from "@mui/material";
 import { Box } from "@mui/material";
 import { useState } from "react";
 import RandomTheme from "./RandomTheme";
+import RandomSample from "./RandomSample";
 import { TabPanel } from "../../../components/TabPanel";
-
-function a11yProps(index: number) {
-  return {
-    id: `vertical-tab-${index}`,
-    "aria-controls": `vertical-tabpanel-${index}`,
-  };
-}
 
 type Props = {
   group: Group;
@@ -28,6 +22,18 @@ const ChaosWindow = ({
   setGameSettings,
 }: Props) => {
   const [themeViewing, setThemeViewing] = useState(0);
+
+  function a11yProps(index: number) {
+    return {
+      id: `vertical-tab-${index}`,
+      "aria-controls": `vertical-tabpanel-${index}`,
+      sx: {
+        backgroundColor: themeViewing == index ? "#eeeeee" : "#ffffff",
+        border: "none",
+      },
+    };
+  }
+
   const viewState = {
     meSelected: (meIndex: number) => {
       switch (meIndex) {
@@ -51,6 +57,7 @@ const ChaosWindow = ({
           bgcolor: "background.white",
           display: "flex",
           height: "50vh",
+          borderRadius: 10,
         }}
       >
         <Tabs
@@ -84,7 +91,10 @@ const ChaosWindow = ({
           />
         </TabPanel>
         <TabPanel value={themeViewing} index={1}>
-          Item Two
+          <RandomSample
+            gameSettings={gameSettings}
+            setGameSettings={setGameSettings}
+          />
         </TabPanel>
         <TabPanel value={themeViewing} index={2}>
           Item Three

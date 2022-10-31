@@ -1,0 +1,29 @@
+type Group {
+   groupId: String!
+   name: String!
+   gameMode: Int!
+ }
+ 
+type Theme {
+   content: String!
+   description: String
+   idUploadedBy: String!
+ }
+
+type Sample {
+  url: String!
+  description: String
+  idUploadedBy: String!
+}
+
+type Query {
+  group(groupId: String!): Group!
+}
+
+type Mutation {
+  insertGroup(groupId: String!, name: String!, gameMode: Int!): Group!
+  uploadTheme(content: String!, description: String, idUploadedBy: String!): Theme!
+  uploadSample(url: String!, description: String, idUploadedBy: String!): Sample!
+  randomTheme: Theme!
+  randomSample: Sample!
+}

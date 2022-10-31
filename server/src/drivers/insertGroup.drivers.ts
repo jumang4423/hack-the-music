@@ -1,0 +1,29 @@
+import { Group } from "../generated/graphql";
+import { FireStoreApp } from "./firebase.drivers";
+import ErrStr from "../domain/ErrStr.domain";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { ErrsEnumeration } from "../util/err.util";
+
+// from firestore, groups, then returns itself group object if success
+// else returns error string from second arguments
+export const InsertGroupDriver = async (
+  group: Group,
+  indexId: string
+): Promise<[Group | null, ErrStr]> => {
+  const db = FireStoreApp;
+
+  try {
+    // check already exist
+    const docRef = doc(db, "groups", indexId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      throw new Error(ErrsEnumeration.GROUP_ALREADY_EXISTS);
+    }
+    await setDoc(docRef, group);
+
+    return [group, new ErrStr({ isErr: false, errStr: "" })];
+  } catch (err: unknown) {
+    console.log(err);
+    return [null, new ErrStr({ isErr: true, errStr: (err as Error).message })];
+  }
+};

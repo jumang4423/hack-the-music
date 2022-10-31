@@ -2,39 +2,42 @@ import { useState } from "react";
 import { Group } from "../../App";
 import { ChaosGameSettingsType } from "../../../models/chaosGameType";
 import ChaosWindow from "./ChaosWindow";
+import RandomSample from "./RandomSample";
 
 type Props = {
   group: Group;
   setGroup: (group: Group) => void;
+  gameSettings: ChaosGameSettingsType;
+  setGameSettings: (gameSettings: ChaosGameSettingsType) => void;
 };
 
-const ChaosModeGame = ({ group, setGroup }: Props) => {
-  const [gameSetings, setGameSettings] = useState<ChaosGameSettingsType>({
-    randomTheme: {
-      enabled: true,
-      themes: [],
-    },
-    randomSamples: {
-      enabled: false,
-      sampleIndexes: [],
-    },
-    lifeSoundSampling: {
-      enabled: false,
-      generativeId: 0,
-    },
-    sceneIndex: 0,
-  });
+const ChaosModeGame = ({
+  group,
+  setGroup,
+  gameSettings,
+  setGameSettings,
+}: Props) => {
   const viewState = {
     sceneComponent: (sceneIndex: number) => {
       switch (sceneIndex) {
         case 0:
           return (
-            <ChaosWindow
-              group={group}
-              setGroup={setGroup}
-              gameSettings={gameSetings}
-              setGameSettings={setGameSettings}
-            />
+            <div>
+              <h2
+                style={{
+                  marginTop: "32px",
+                }}
+              >
+                🌀 chaos mode
+              </h2>
+
+              <ChaosWindow
+                group={group}
+                setGroup={setGroup}
+                gameSettings={gameSettings}
+                setGameSettings={setGameSettings}
+              />
+            </div>
           );
         default:
           return <div>Not found</div>;
@@ -42,18 +45,7 @@ const ChaosModeGame = ({ group, setGroup }: Props) => {
     },
   };
 
-  return (
-    <div>
-      <h2
-        style={{
-          marginTop: "32px",
-        }}
-      >
-        🌀 chaos mode
-      </h2>
-      {viewState.sceneComponent(gameSetings.sceneIndex)}
-    </div>
-  );
+  return <div>{viewState.sceneComponent(gameSettings.sceneIndex)}</div>;
 };
 
 export default ChaosModeGame;

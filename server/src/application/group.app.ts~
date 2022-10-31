@@ -1,0 +1,16 @@
+import { Group } from "../generated/graphql";
+import ErrStr from "../domain/ErrStr.domain";
+import { GetGroupDriver } from "../drivers/getGroup.drivers";
+
+export const GetGroupApp = async (
+  groupId: string
+): Promise<[Group | null, ErrStr]> => {
+  const [groupObj, err] = await GetGroupDriver(groupId);
+  if (err) {
+    return [null, err];
+  }
+
+  console.log("groupObj", groupObj);
+
+  return [groupObj, err];
+};

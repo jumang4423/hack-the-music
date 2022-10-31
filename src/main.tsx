@@ -2,87 +2,31 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { CookiesProvider } from "react-cookie";
 import App from "./pages/App";
 import "./index.css";
 import Page404 from "./pages/Page404";
-import { makeExecutableSchema } from "@graphql-tools/schema";
-import { addMocksToSchema } from "@graphql-tools/mock";
-import { SchemaLink } from "@apollo/client/link/schema";
-import { gql } from "@apollo/client";
-import { Theme, ThemeBankMock } from "./fun_main";
-
-const stringSchema = gql`
-  type Group {
-    groupId: String!
-    name: String!
-    gameMode: Int!
-  }
-
-  type Theme {
-    themeIndex: Int!
-    content: String!
-    description: String
-  }
-
-  type Query {
-    group(groupId: String!): Group
-  }
-
-  type Mutation {
-    insertGroup(groupId: String!, name: String!, gameMode: Int!): Group
-    randomTheme: Theme
-  }
-`;
-
-const schema = makeExecutableSchema({ typeDefs: stringSchema });
-const schemaWithMocks = addMocksToSchema({
-  schema,
-  mocks: {
-    Query: () => ({
-      group: () => {
-        return {
-          groupId: "test_group",
-          name: "test",
-          gameMode: 0,
-        };
-      },
-    }),
-    Mutation: () => ({
-      insertGroup: () => {
-        return {
-          groupId: "test_group",
-          name: "test",
-          gameMode: 0,
-        };
-      },
-      randomTheme: () => {
-        const ramdomlySelectedTheme: Theme =
-          ThemeBankMock[Math.floor(Math.random() * ThemeBankMock.length)];
-        return ramdomlySelectedTheme;
-      },
-    }),
-  },
-});
 
 const client = new ApolloClient({
-  uri: "https://hogehoge.com/graphql",
+  uri: "http://localhost:4000/graphql",
   cache: new InMemoryCache(),
-  link: new SchemaLink({ schema: schemaWithMocks }),
 });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <BrowserRouter>
-        <link
-          href="https://pvinis.github.io/iosevka-webfont/3.4.1/iosevka.css"
-          rel="stylesheet"
-        />
-        <Routes>
-          <Route index element={<App />} />
-          <Route path={"*"} element={<Page404 />} />
-        </Routes>
-      </BrowserRouter>
+      <CookiesProvider>
+        <BrowserRouter>
+          <link
+            href="https://pvinis.github.io/iosevka-webfont/3.4.1/iosevka.css"
+            rel="stylesheet"
+          />
+          <Routes>
+            <Route index element={<App />} />
+            <Route path={"*"} element={<Page404 />} />
+          </Routes>
+        </BrowserRouter>
+      </CookiesProvider>
     </ApolloProvider>
   </React.StrictMode>
 );

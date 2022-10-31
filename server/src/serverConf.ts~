@@ -1,0 +1,3 @@
+export const serverConf = {
+  PORT: 4000,
+};

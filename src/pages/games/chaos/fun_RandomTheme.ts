@@ -16,13 +16,14 @@ export const RandomThemeEanbleCheckboxHandleChange = (
 
 export const RandomThemeManuallyAddButtonHandleClick = (
   gameSettings: ChaosGameSettingsType,
-  setGameSettings: (gameSettings: ChaosGameSettingsType) => void
+  setGameSettings: (gameSettings: ChaosGameSettingsType) => void,
+  myId: string
 ) => {
   const newGameSettings = Object.assign({}, gameSettings);
   newGameSettings.randomTheme.themes.push({
-    themeIndex: null,
     content: "",
     description: null,
+    idUploadedBy: myId,
   });
   setGameSettings(newGameSettings);
 

@@ -1,0 +1,25 @@
+import { Group } from "../generated/graphql";
+import { FireStoreApp } from "./firebase.drivers";
+import ErrStr from "../domain/ErrStr.domain";
+import { doc, getDoc } from "firebase/firestore";
+import { ErrsEnumeration } from "../util/err.util";
+
+export const GetGroupDriver = async (
+  groupId: string
+): Promise<[Group | null, ErrStr]> => {
+  const db = FireStoreApp;
+
+  try {
+    const docRef = doc(db, "groups", groupId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const group = docSnap.data() as Group;
+      return [group, new ErrStr({ isErr: false })];
+    } else {
+      throw new Error(ErrsEnumeration.NO_SUCH_GROUP_IN_FS);
+    }
+  } catch (err: unknown) {
+    return [null, new ErrStr({ isErr: true, errStr: (err as Error).message })];
+  }
+};

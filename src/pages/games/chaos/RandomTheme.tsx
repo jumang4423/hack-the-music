@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ChaosGameSettingsType } from "../../../models/chaosGameType";
 import ThemeInputBox from "./ThemeInputBox";
 import { FormControlLabel } from "@mui/material";
@@ -11,18 +11,27 @@ import {
 import { useMutation } from "@apollo/client";
 import { Button } from "@mui/material";
 import { GET_RANDOM_THEME } from "../../../fun/apis";
-import { NetworkStatus } from "@apollo/client";
+import { useCookies } from "react-cookie";
+import UploaderModal from "../../../components/UploaderModal";
+import ThemeUploaderModal from "./ThemeUploaderModal";
+
 type Props = {
   gameSettings: ChaosGameSettingsType;
   setGameSettings: (gameSettings: ChaosGameSettingsType) => void;
 };
 
 const RandomTheme = ({ gameSettings, setGameSettings }: Props) => {
-  const [GetTheme, { client, loading }] = useMutation(GET_RANDOM_THEME, {
+  const [GetTheme, { loading }] = useMutation(GET_RANDOM_THEME, {
     onCompleted({ randomTheme }) {
       RandomThemeDataHandle(randomTheme, gameSettings, setGameSettings);
     },
   });
+  const [cookies, setCookie, removeCookie] = useCookies();
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <div>
@@ -51,7 +60,7 @@ const RandomTheme = ({ gameSettings, setGameSettings }: Props) => {
             }}
           />
         }
-        label="enable"
+        label="enabled"
       />
 
       {gameSettings.randomTheme.enabled && (
@@ -67,7 +76,7 @@ const RandomTheme = ({ gameSettings, setGameSettings }: Props) => {
               width: "100%",
               display: "flex",
               flexDirection: "column",
-              marginTop: "0",
+              marginTop: "-10px",
               marginBottom: "20px",
             }}
           >
@@ -93,20 +102,12 @@ const RandomTheme = ({ gameSettings, setGameSettings }: Props) => {
           >
             <div
               style={{
-                margin: "4px",
+                margin: "4px 4px 4px 0px",
               }}
               hidden={gameSettings.randomTheme.themes.length >= 5}
             >
-              <Button
-                variant="outlined"
-                onClick={() =>
-                  RandomThemeManuallyAddButtonHandleClick(
-                    gameSettings,
-                    setGameSettings
-                  )
-                }
-              >
-                ＋ manually add
+              <Button variant="outlined" onClick={() => setOpen(true)}>
+                ＋
               </Button>
             </div>
             <div
@@ -125,10 +126,25 @@ const RandomTheme = ({ gameSettings, setGameSettings }: Props) => {
                   }
                 }}
               >
-                {loading ? "loading" : "🌏 random"}
+                {loading ? "loading" : "🌏 random theme"}
               </Button>
             </div>
           </div>
+          <UploaderModal
+            open={open}
+            title={"🚢 upload theme"}
+            handleClose={handleClose}
+            gameSettings={gameSettings}
+            setGameSettings={setGameSettings}
+          >
+            <div>
+              <ThemeUploaderModal
+                gameSettings={gameSettings}
+                setGameSettings={setGameSettings}
+                onClose={handleClose}
+              />
+            </div>
+          </UploaderModal>
         </div>
       )}
     </div>

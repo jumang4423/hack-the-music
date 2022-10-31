@@ -40,7 +40,11 @@ const ThemeInputBox = ({ index, gameSettings, setGameSettings }: Props) => {
         delete
       </div>
 
-      <div>
+      <div
+        style={{
+          width: "100%",
+        }}
+      >
         <div
           style={{
             display: "flex",
@@ -50,7 +54,7 @@ const ThemeInputBox = ({ index, gameSettings, setGameSettings }: Props) => {
         >
           <InputSimpler
             fullWidth={true}
-            placeholder="Theme"
+            placeholder="new theme"
             value={gameSettings.randomTheme.themes[index].content}
             title={`${index + 1}.`}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
