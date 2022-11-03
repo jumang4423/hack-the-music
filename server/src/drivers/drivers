@@ -1,7 +1,8 @@
   /Users/jumang4423/PROJECTS/webFrontend/make-some-nice/server/src/drivers:
   total used in directory 152 available 27.3 GiB
   drwxr-xr-x  25 jumang4423  staff  800 Nov  2 00:43 .
-  drwxr-xr-x  13 jumang4423  staff  416 Oct 29 18:36 ..
+
+drwxr-xr-x  13 jumang4423  staff  416 Oct 29 18:36 ..
   -rw-r--r--   1 jumang4423  staff  552 Oct 29 13:58 firebase.drivers.ts
   -rw-r--r--   1 jumang4423  staff  564 Oct 29 13:51 firebase.drivers.ts~
   -rw-r--r--   1 jumang4423  staff  604 Oct 30 22:58 getCollLen.drivers.ts

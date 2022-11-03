@@ -1,0 +1,6 @@
+import ErrStr from "../../../domain/ErrStr.domain";
+
+export interface GroupRepository {
+  findGroupById(id: string): Promise<[GroupEntity, ErrStr]>;
+  insertGroup(group: GroupEntity): Promise<GroupEntity>;
+}

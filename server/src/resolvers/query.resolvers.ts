@@ -1,13 +1,13 @@
 import { Group, QueryResolvers } from "../generated/graphql";
-import { GetGroupApp } from "../application/group.app";
+import { GqlGroupRepository } from "../repository/group/GqlGroupRepository.repository";
+import { GroupInteractor } from "../usecase/group/GroupInteractor.usecase";
 
 export const queryResolvers: QueryResolvers = {
   group: async (_, { groupId }): Promise<Group> => {
-    const [vle, err] = await GetGroupApp(groupId);
-    if (err.IsError()) {
-      throw err.GetError;
-    }
+    const repository = new GqlGroupRepository();
+    const usecase = new GroupInteractor(repository);
+    await usecase.handleFindGroupById({ groupId });
 
-    return vle!;
+    return usecase.getResponseFindGroupById();
   },
 };

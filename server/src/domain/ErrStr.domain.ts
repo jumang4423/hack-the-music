@@ -16,6 +16,11 @@ class ErrStr {
   public GetError(): string {
     return this.errStr;
   }
+
+  public ToError(errstr: string): void {
+    this.isErr = true;
+    this.errStr = errstr;
+  }
 }
 
 export default ErrStr;
