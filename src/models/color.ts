@@ -4,6 +4,7 @@ export const ColorObj = {
   blue: "#aaaaff",
   black: "#000000",
   gray: "#888888",
-  lightGray: "#eeeeee",
+  white: "#ffffff",
+  lightGray: "#f5f5f5",
   lightGreen: "#cceecc",
 };

@@ -6,7 +6,8 @@ import ChaosModeGame from "./games/chaos/ChaosModeGame";
 import { ChaosGameSettingsType } from "../models/chaosGameType";
 import { useState } from "react";
 import TimeLimitBox from "./games/TimeLimitBox";
-import { Button } from "@mui/material";
+import Devider from "../components/Devider";
+import HackyButton from "../components/HackyButton";
 
 type Props = {
   modalOpen: boolean;
@@ -29,6 +30,10 @@ const GameModal: React.FC<Props> = ({
     randomSamples: {
       enabled: true,
       samples: [],
+    },
+    randomImages: {
+      enabled: false,
+      images: [],
     },
     lifeSoundSampling: {
       enabled: false,
@@ -86,43 +91,66 @@ const GameModal: React.FC<Props> = ({
               padding: "1rem 4rem 1rem 4rem",
             }}
           >
-            <h2
+            <div
               style={{
                 color: ColorObj.black,
-                marginBottom: "-12px",
+                marginTop: "1.5rem",
+                marginBottom: "1rem",
+                fontSize: "1.3rem",
               }}
             >
-              # {group.name}
-            </h2>
-            <h3 style={{ color: ColorObj.gray }}>group id: {group.groupId}</h3>
-
+              # {group.name} 💿 {group.groupId}
+            </div>
+            <Devider />
             {viewState.gameComponentSelector(group.gameMode)}
+            <Devider />
             <TimeLimitBox
               gameSettings={gameSettings}
               setGameSettings={setGameSettings}
             />
-
-            <hr style={{ width: "100%", marginTop: "2rem" }} />
+            <Devider />
+            <div
+              style={{
+                marginTop: "48px",
+                width: "100%",
+                display: "flex",
+                justifyContent: "flex-end",
+                color: "yellowgreen",
+              }}
+            >
+              <h1> start? </h1>
+            </div>
 
             <div
               style={{
-                marginTop: "2rem",
+                marginTop: "0",
+                marginBottom: "4rem",
                 width: "100%",
                 display: "flex",
-                right: 0,
                 justifyContent: "flex-end",
+                right: 0,
               }}
             >
-              <Button
-                variant="outlined"
-                sx={{ marginRight: "16px" }}
+              <HackyButton
+                name={"back"}
+                mode={"light"}
+                style={{
+                  marginRight: "1rem",
+                }}
                 onClick={() => {
                   refresh();
                 }}
-              >
-                back
-              </Button>
-              <Button variant="contained">start</Button>
+              />
+
+              <HackyButton
+                name={"👍 start"}
+                mode={"light"}
+                prefer={true}
+                style={{
+                  marginRight: "0rem",
+                }}
+                onClick={() => {}}
+              />
             </div>
           </div>
         </div>

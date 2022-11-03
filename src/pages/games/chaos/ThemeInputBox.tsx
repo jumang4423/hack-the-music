@@ -1,5 +1,4 @@
 import { ChaosGameSettingsType } from "../../../models/chaosGameType";
-import InputSimpler from "../../../components/InputSimpler";
 
 type Props = {
   index: number;

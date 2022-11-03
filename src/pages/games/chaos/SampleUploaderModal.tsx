@@ -2,12 +2,17 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { useState } from "react";
 import { ChaosGameSettingsType } from "../../../models/chaosGameType";
-import { Button } from "@mui/material";
 import { FilePicker } from "react-file-picker";
+import { Button } from "@mui/material";
 import InputSimpler from "../../../components/InputSimpler";
-import { FileNameFromPath } from "../../../fun/fileNameFromPath";
 import { useCookies } from "react-cookie";
-import { Cookie } from "universal-cookie";
+import { useMutation } from "@apollo/client";
+import { INSERT_SAMPLE } from "../../../fun/apis";
+import {
+  OnSampleFetch,
+  SampleUploaderFormvalidation,
+  UploadSample,
+} from "./fun_SampleUploaderModal";
 
 type Props = {
   gameSettings: ChaosGameSettingsType;
@@ -20,38 +25,25 @@ const SampleUploaderModal = ({
   setGameSettings,
   onClose,
 }: Props) => {
+  const [InsertSample] = useMutation(INSERT_SAMPLE, {
+    onCompleted({ uploadSample }) {
+      OnSampleFetch(
+        uploadSample,
+        gameSettings,
+        setGameSettings,
+        onClose,
+        setIsUploading
+      );
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
   const [file, setFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [description, setDescription] = useState<string>("");
   const [descError, setDescError] = useState<boolean>(false);
-  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [cookies] = useCookies();
-
-  const onSampleUpload = async (cookies: Cookie) => {
-    setIsUploading(true);
-    if (description === "") {
-      setDescError(true);
-      return;
-    }
-    if (!file) {
-      return;
-    }
-    setDescError(false);
-    // TODO: upload file to firebase storage
-    const uploadedSampleUrl = "https://music/hoge.mp3";
-    // TODO: add sample to gameSettings
-    const newGameSettings = Object.assign({}, gameSettings);
-    newGameSettings.randomSamples.samples.push({
-      description: description,
-      url: uploadedSampleUrl,
-      idUploadedBy: cookies.userId,
-    });
-
-    setGameSettings(newGameSettings);
-    const userId = cookies.userId;
-    setFile(null);
-    setDescription("");
-    onClose();
-  };
 
   return (
     <div style={{}}>
@@ -59,7 +51,7 @@ const SampleUploaderModal = ({
         <div>upload your sample to the cloud!</div>
         <div>accept only .mp3 file and max file size is 5MB</div>
         <div>* do not upload a sample not made by you, please</div>
-        <div>* describe your sample in the fileName and description</div>
+        <div>* describe your sample in description</div>
         <div
           style={{
             width: "100%",
@@ -73,11 +65,12 @@ const SampleUploaderModal = ({
               extensions={["mp3"]}
               maxSize={5}
               onChange={(FileObject: File) => {
+                FileObject.type === "audio/mp3";
                 setFile(FileObject);
               }}
               onError={(errMsg: string) => alert(errMsg)}
             >
-              <Button variant="contained">select</Button>
+              <Button variant="contained">import</Button>
             </FilePicker>
           )}
 
@@ -87,7 +80,7 @@ const SampleUploaderModal = ({
                 color: "#4b4",
               }}
             >
-              {FileNameFromPath(file.name)}
+              imported
             </div>
           )}
 
@@ -112,8 +105,21 @@ const SampleUploaderModal = ({
       </DialogContent>
       <DialogActions>
         <Button
+          disabled={isUploading}
           onClick={() => {
-            onSampleUpload(cookies);
+            SampleUploaderFormvalidation(
+              file ? "ok" : "",
+              setDescError,
+              description
+            ) &&
+              UploadSample(
+                file!,
+                InsertSample,
+                cookies,
+                onClose,
+                description,
+                setIsUploading
+              );
           }}
         >
           {isUploading ? "uploading..." : "upload"}

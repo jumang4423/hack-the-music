@@ -5,12 +5,12 @@ import { Checkbox } from "@mui/material";
 import {
   RandomSamplesEnableCheckboxHandleChange,
   RandomSampleDataHandle,
-} from "./fun_RadnomSample";
-import { Button } from "@mui/material";
+} from "./fun_RandomSample";
+import HackyButton from "../../../components/HackyButton";
 import SampleInputBox from "./SampleInputBox";
 import { useMutation } from "@apollo/client";
 import { GET_RANDOM_SAMPLE } from "../../../fun/apis";
-import UploaderModal from "../../../components/UploaderModal";
+import GenericModal from "../../../components/GenericModal";
 import SampleUploaderModal from "./SampleUploaderModal";
 
 type Props = {
@@ -93,41 +93,34 @@ const RandomSample = ({ gameSettings, setGameSettings }: Props) => {
         >
           <div
             style={{
-              margin: "4px 4px 4px 0px",
+              margin: "0px 4px 4px 0px",
             }}
             hidden={gameSettings.randomSamples.samples.length >= 5}
           >
-            <Button
-              variant="outlined"
+            <HackyButton
+              name={"＋"}
               onClick={() => {
                 setOpen(true);
-                // RandomSamplesNewSampleHandleClick(
-                //   gameSettings,
-                //   setGameSettings
-                // );
               }}
-            >
-              ＋
-            </Button>
+            />
           </div>
           <div
             style={{
-              margin: "8px",
+              margin: "4px 8px 8px 8px",
             }}
             hidden={gameSettings.randomSamples.samples.length >= 5}
           >
-            <Button
-              variant="contained"
+            <HackyButton
+              prefer={true}
+              name={loading ? "loading..." : "🌏 random sample"}
               onClick={() => {
                 GetSample();
               }}
-            >
-              {loading ? "loading" : "🌏 random sample"}
-            </Button>
+            />
           </div>
         </div>
 
-        <UploaderModal
+        <GenericModal
           open={open}
           title={"🚢 upload sample file"}
           handleClose={handleClose}
@@ -141,7 +134,7 @@ const RandomSample = ({ gameSettings, setGameSettings }: Props) => {
               onClose={handleClose}
             />
           </div>
-        </UploaderModal>
+        </GenericModal>
       </div>
     </div>
   );

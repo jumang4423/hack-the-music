@@ -1,8 +1,4 @@
-export type Theme = {
-  content: string;
-  description: string | null;
-  idUploadedBy: string;
-};
+import { Theme, Sample } from "./gql/graphql";
 
 export const ThemeBankMock: Array<Theme> = [
   {
@@ -63,12 +59,6 @@ export const ThemeBankMock: Array<Theme> = [
     idUploadedBy: "jumango",
   },
 ];
-
-export type Sample = {
-  url: string;
-  description: string | null;
-  idUploadedBy: string;
-};
 
 export const SampleBankMock: Array<Sample> = [
   {

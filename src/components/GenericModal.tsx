@@ -54,7 +54,7 @@ type Props = {
   setGameSettings: (gameSettings: ChaosGameSettingsType) => void;
 };
 
-const UploaderModal = ({
+const GenericModal = ({
   open,
   handleClose,
   title,
@@ -81,4 +81,4 @@ const UploaderModal = ({
   );
 };
 
-export default UploaderModal;
+export default GenericModal;

@@ -19,11 +19,21 @@ export type Group = {
   name: Scalars['String'];
 };
 
+export type Image = {
+  __typename?: 'Image';
+  description?: Maybe<Scalars['String']>;
+  idUploadedBy: Scalars['String'];
+  url: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   insertGroup: Group;
+  randomImage: Image;
+  randomImages: Array<Maybe<Image>>;
   randomSample: Sample;
   randomTheme: Theme;
+  uploadImage: Image;
   uploadSample: Sample;
   uploadTheme: Theme;
 };
@@ -33,6 +43,18 @@ export type MutationInsertGroupArgs = {
   gameMode: Scalars['Int'];
   groupId: Scalars['String'];
   name: Scalars['String'];
+};
+
+
+export type MutationRandomImagesArgs = {
+  count: Scalars['Int'];
+};
+
+
+export type MutationUploadImageArgs = {
+  description?: Maybe<Scalars['String']>;
+  idUploadedBy: Scalars['String'];
+  url: Scalars['String'];
 };
 
 
@@ -61,7 +83,7 @@ export type QueryGroupArgs = {
 
 export type Sample = {
   __typename?: 'Sample';
-  description?: Maybe<Scalars['String']>;
+  description: Scalars['String'];
   idUploadedBy: Scalars['String'];
   url: Scalars['String'];
 };
@@ -154,6 +176,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Group: ResolverTypeWrapper<Group>;
+  Image: ResolverTypeWrapper<Image>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
@@ -166,6 +189,7 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
   Group: Group;
+  Image: Image;
   Int: Scalars['Int'];
   Mutation: {};
   Query: {};
@@ -181,10 +205,20 @@ export type GroupResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 }>;
 
+export type ImageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Image'] = ResolversParentTypes['Image']> = ResolversObject<{
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  idUploadedBy?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+}>;
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   insertGroup?: Resolver<ResolversTypes['Group'], ParentType, ContextType, RequireFields<MutationInsertGroupArgs, 'gameMode' | 'groupId' | 'name'>>;
+  randomImage?: Resolver<ResolversTypes['Image'], ParentType, ContextType>;
+  randomImages?: Resolver<Array<Maybe<ResolversTypes['Image']>>, ParentType, ContextType, RequireFields<MutationRandomImagesArgs, 'count'>>;
   randomSample?: Resolver<ResolversTypes['Sample'], ParentType, ContextType>;
   randomTheme?: Resolver<ResolversTypes['Theme'], ParentType, ContextType>;
+  uploadImage?: Resolver<ResolversTypes['Image'], ParentType, ContextType, RequireFields<MutationUploadImageArgs, 'idUploadedBy' | 'url'>>;
   uploadSample?: Resolver<ResolversTypes['Sample'], ParentType, ContextType, RequireFields<MutationUploadSampleArgs, 'idUploadedBy' | 'url'>>;
   uploadTheme?: Resolver<ResolversTypes['Theme'], ParentType, ContextType, RequireFields<MutationUploadThemeArgs, 'content' | 'idUploadedBy'>>;
 }>;
@@ -194,7 +228,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 }>;
 
 export type SampleResolvers<ContextType = any, ParentType extends ResolversParentTypes['Sample'] = ResolversParentTypes['Sample']> = ResolversObject<{
-  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   idUploadedBy?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
@@ -209,6 +243,7 @@ export type ThemeResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type Resolvers<ContextType = any> = ResolversObject<{
   Group?: GroupResolvers<ContextType>;
+  Image?: ImageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Sample?: SampleResolvers<ContextType>;

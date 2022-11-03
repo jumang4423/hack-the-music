@@ -7,6 +7,7 @@ import InputSimpler from "../components/InputSimpler";
 import { GameModeEnum } from "../models/gameMode";
 import { useMutation } from "@apollo/client";
 import { INSERT_GROUP } from "../fun/apis";
+import HackyButton from "../components/HackyButton";
 import { Group } from "./App";
 
 type Props = {
@@ -144,11 +145,19 @@ const NewSessionModal: React.FC<Props> = ({
                 marginTop: "1rem",
               }}
             />
-
-            <button onClick={onCreateSession}>
-              {loading ? "loading..." : "create"}
-            </button>
-
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-start",
+              }}
+            >
+              <HackyButton
+                prefer
+                name={loading ? "loading..." : "create"}
+                onClick={onCreateSession}
+              />
+            </div>
             <div
               style={{
                 marginTop: "5rem",

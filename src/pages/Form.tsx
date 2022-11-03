@@ -4,6 +4,7 @@ import { Input } from "@mui/material";
 import { ColorObj } from "../models/color";
 import { useQuery } from "@apollo/client";
 import { GET_GROUP } from "../fun/apis";
+import HackyButton from "../components/HackyButton";
 
 type Props = {
   setGroup: (group: Group) => void;
@@ -59,7 +60,7 @@ const Form = ({ setGroup, setModalOpen }: Props) => {
           marginBottom: "16px",
         }}
       >
-        # make-some-nice
+        # hack-the-music
       </h1>
       <div className="card">
         <div
@@ -80,15 +81,15 @@ const Form = ({ setGroup, setModalOpen }: Props) => {
               setFormData({ ...formData, groupIdBox: e.target.value });
             }}
           />
-          <button
+          <HackyButton
+            prefer
             style={{
               marginLeft: "1rem",
               marginRight: "1rem",
             }}
+            name={loading ? "loading..." : "join"}
             onClick={onJoingroup}
-          >
-            {loading ? "loading..." : "join"}
-          </button>
+          />
         </div>
         <p
           style={{

@@ -12,9 +12,16 @@ type Theme {
 
 type Sample {
   url: String!
+  description: String!
+  idUploadedBy: String!
+}
+
+type Image { 
+  url: String!
   description: String
   idUploadedBy: String!
 }
+
 
 type Query {
   group(groupId: String!): Group!
@@ -24,6 +31,9 @@ type Mutation {
   insertGroup(groupId: String!, name: String!, gameMode: Int!): Group!
   uploadTheme(content: String!, description: String, idUploadedBy: String!): Theme!
   uploadSample(url: String!, description: String, idUploadedBy: String!): Sample!
+  uploadImage(url: String!, description: String, idUploadedBy: String!): Image!
   randomTheme: Theme!
   randomSample: Sample!
+  randomImage: Image!
+  randomImages(count: Int!): [Image]!
 }

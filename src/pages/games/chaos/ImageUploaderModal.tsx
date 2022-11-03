@@ -2,12 +2,18 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { useState } from "react";
 import { ChaosGameSettingsType } from "../../../models/chaosGameType";
-import { Button } from "@mui/material";
 import { FilePicker } from "react-file-picker";
+import { Button } from "@mui/material";
 import InputSimpler from "../../../components/InputSimpler";
 import { FileNameFromPath } from "../../../fun/fileNameFromPath";
 import { useCookies } from "react-cookie";
-import { Cookie } from "universal-cookie";
+import { useMutation } from "@apollo/client";
+import { INSERT_IMAGE } from "../../../fun/apis";
+import {
+  OnImageFetch,
+  ImageUploaderFormvalidation,
+  UploadImage,
+} from "./fun_ImageUploaderModal";
 
 type Props = {
   gameSettings: ChaosGameSettingsType;
@@ -15,51 +21,36 @@ type Props = {
   onClose: () => void;
 };
 
-const SampleUploaderModal = ({
+const ImageUploaderModal = ({
   gameSettings,
   setGameSettings,
   onClose,
 }: Props) => {
+  const [InsertImage] = useMutation(INSERT_IMAGE, {
+    onCompleted({ uploadImage }) {
+      OnImageFetch(
+        uploadImage,
+        gameSettings,
+        setGameSettings,
+        onClose,
+        setIsUploading
+      );
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
   const [file, setFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [description, setDescription] = useState<string>("");
   const [descError, setDescError] = useState<boolean>(false);
-  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [cookies] = useCookies();
-
-  const onSampleUpload = async (cookies: Cookie) => {
-    setIsUploading(true);
-    if (description === "") {
-      setDescError(true);
-      return;
-    }
-    if (!file) {
-      return;
-    }
-    setDescError(false);
-    // TODO: upload file to firebase storage
-    const uploadedSampleUrl = "https://music/hoge.mp3";
-    // TODO: add sample to gameSettings
-
-    const newGameSettings = Object.assign({}, gameSettings);
-    newGameSettings.samples.push({
-      description: description,
-      url: uploadedSampleUrl,
-    });
-
-    setGameSettings(newGameSettings);
-    const userId = cookies.userId;
-    setFile(null);
-    setDescription("");
-    onClose();
-  };
-
   return (
     <div style={{}}>
       <DialogContent dividers>
-        <div>upload your sample to the cloud!</div>
-        <div>accept only .mp3 file and max file size is 5MB</div>
-        <div>* do not upload a sample not made by you, please</div>
-        <div>* describe your sample in the fileName and description</div>
+        <div>upload your image to the cloud!</div>
+        <div>accept only .png file and max file size is 5MB</div>
+        <div>* describe your image in description</div>
         <div
           style={{
             width: "100%",
@@ -70,14 +61,15 @@ const SampleUploaderModal = ({
         >
           {!file && (
             <FilePicker
-              extensions={["mp3"]}
+              extensions={["png"]}
               maxSize={5}
               onChange={(FileObject: File) => {
+                FileObject.type === "image/png";
                 setFile(FileObject);
               }}
               onError={(errMsg: string) => alert(errMsg)}
             >
-              <Button variant="contained">select</Button>
+              <Button variant="contained">import</Button>
             </FilePicker>
           )}
 
@@ -87,7 +79,7 @@ const SampleUploaderModal = ({
                 color: "#4b4",
               }}
             >
-              {FileNameFromPath(file.name)}
+              imported
             </div>
           )}
 
@@ -100,7 +92,7 @@ const SampleUploaderModal = ({
           >
             <InputSimpler
               title=""
-              placeholder="sample description"
+              placeholder="image description"
               value={description}
               error={descError}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,8 +104,21 @@ const SampleUploaderModal = ({
       </DialogContent>
       <DialogActions>
         <Button
+          disabled={isUploading}
           onClick={() => {
-            onSampleUpload(cookies);
+            ImageUploaderFormvalidation(
+              file ? "ok" : "",
+              setDescError,
+              description
+            ) &&
+              UploadImage(
+                file!,
+                InsertImage,
+                cookies,
+                onClose,
+                description,
+                setIsUploading
+              );
           }}
         >
           {isUploading ? "uploading..." : "upload"}
@@ -123,4 +128,4 @@ const SampleUploaderModal = ({
   );
 };
 
-export default SampleUploaderModal;
+export default ImageUploaderModal;

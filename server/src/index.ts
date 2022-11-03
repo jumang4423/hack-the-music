@@ -1,7 +1,7 @@
 import express from "express";
 import { ServerConf } from "./serverConf";
-import { ApolloMiddleware } from "./middleware/apollo.middleware";
-import { AuthMiddleware } from "./middleware/auth.middleware";
+import { ApolloMiddleware } from "./infrastructure/apollo.middleware";
+import { AuthMiddleware } from "./infrastructure/auth.middleware";
 
 const app = express();
 app.use(AuthMiddleware);

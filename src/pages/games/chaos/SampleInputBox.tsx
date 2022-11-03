@@ -1,45 +1,6 @@
-import InputSimpler from "../../../components/InputSimpler";
+import Player from "../../../components/HitMusicPlayer";
 import { ChaosGameSettingsType } from "../../../models/chaosGameType";
 import { FileNameFromPath } from "../../../fun/fileNameFromPath";
-import { useSound } from "use-sound";
-
-type PlayerProps = {
-  url: string;
-};
-
-const Player = ({ url }: PlayerProps) => {
-  const [play, { stop }] = useSound(url, { volume: 0.5 });
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "64px",
-        width: "64px",
-        cursor: "pointer",
-      }}
-      onMouseLeave={() => stop()}
-    >
-      <div
-        style={{
-          background: "#f5f5f5",
-          width: "32px",
-          height: "32px",
-          marginTop: "16px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        onClick={() => play()}
-      >
-        p
-      </div>
-    </div>
-  );
-};
 
 type Props = {
   index: number;
@@ -95,8 +56,7 @@ const SampleInputBox = ({ index, gameSettings, setGameSettings }: Props) => {
           }}
         >
           <h3>
-            {index + 1}.{" "}
-            {FileNameFromPath(gameSettings.randomSamples.samples[index].url)}
+            {index + 1}. {gameSettings.randomSamples.samples[index].description}
           </h3>
         </div>
         <div
@@ -106,7 +66,7 @@ const SampleInputBox = ({ index, gameSettings, setGameSettings }: Props) => {
             color: "grey",
           }}
         >
-          * {gameSettings.randomSamples.samples[index].description}
+          * {FileNameFromPath(gameSettings.randomSamples.samples[index].url)}
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ class ErrStr {
   private errStr: string = "";
   constructor({ isErr, errStr }: { isErr?: boolean; errStr?: string }) {
     if (isErr) {
+      this.isErr = isErr;
       this.errStr = errStr || "Unknown Error";
     }
   }

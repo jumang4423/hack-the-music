@@ -27,11 +27,21 @@ export type Group = {
   name: Scalars['String'];
 };
 
+export type Image = {
+  __typename?: 'Image';
+  description?: Maybe<Scalars['String']>;
+  idUploadedBy: Scalars['String'];
+  url: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   insertGroup: Group;
+  randomImage: Image;
+  randomImages: Array<Maybe<Image>>;
   randomSample: Sample;
   randomTheme: Theme;
+  uploadImage: Image;
   uploadSample: Sample;
   uploadTheme: Theme;
 };
@@ -41,6 +51,18 @@ export type MutationInsertGroupArgs = {
   gameMode: Scalars['Int'];
   groupId: Scalars['String'];
   name: Scalars['String'];
+};
+
+
+export type MutationRandomImagesArgs = {
+  count: Scalars['Int'];
+};
+
+
+export type MutationUploadImageArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  idUploadedBy: Scalars['String'];
+  url: Scalars['String'];
 };
 
 
@@ -69,7 +91,7 @@ export type QueryGroupArgs = {
 
 export type Sample = {
   __typename?: 'Sample';
-  description?: Maybe<Scalars['String']>;
+  description: Scalars['String'];
   idUploadedBy: Scalars['String'];
   url: Scalars['String'];
 };

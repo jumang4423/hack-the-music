@@ -6,6 +6,7 @@ import { Box } from "@mui/material";
 import { useState } from "react";
 import RandomTheme from "./RandomTheme";
 import RandomSample from "./RandomSample";
+import RandomImage from "./RandomImage";
 import { TabPanel } from "../../../components/TabPanel";
 
 type Props = {
@@ -42,6 +43,8 @@ const ChaosWindow = ({
         case 1:
           return gameSettings.randomSamples.enabled;
         case 2:
+          return gameSettings.randomImages.enabled;
+        case 3:
           return gameSettings.lifeSoundSampling.enabled;
         default:
           return false;
@@ -80,8 +83,12 @@ const ChaosWindow = ({
             {...a11yProps(1)}
           />
           <Tab
-            label={`${viewState.meSelected(2) ? "✔︎ " : ""}generative`}
+            label={`${viewState.meSelected(2) ? "✔︎ " : ""}images`}
             {...a11yProps(2)}
+          />
+          <Tab
+            label={`${viewState.meSelected(3) ? "✔︎ " : ""}⚠️ generative`}
+            {...a11yProps(3)}
           />
         </Tabs>
         <TabPanel value={themeViewing} index={0}>
@@ -97,7 +104,13 @@ const ChaosWindow = ({
           />
         </TabPanel>
         <TabPanel value={themeViewing} index={2}>
-          Item Three
+          <RandomImage
+            gameSettings={gameSettings}
+            setGameSettings={setGameSettings}
+          />
+        </TabPanel>
+        <TabPanel value={themeViewing} index={3}>
+          not implemented
         </TabPanel>
       </Box>
     </div>

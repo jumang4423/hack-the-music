@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { Group } from "../../App";
 import { ChaosGameSettingsType } from "../../../models/chaosGameType";
 import ChaosWindow from "./ChaosWindow";
-import RandomSample from "./RandomSample";
 
 type Props = {
   group: Group;
@@ -22,13 +20,17 @@ const ChaosModeGame = ({
       switch (sceneIndex) {
         case 0:
           return (
-            <div>
+            <div
+              style={{
+                marginBottom: "36px",
+              }}
+            >
               <h2
                 style={{
-                  marginTop: "32px",
+                  marginTop: "36px",
                 }}
               >
-                🌀 chaos mode
+                λ chaos mode
               </h2>
 
               <ChaosWindow

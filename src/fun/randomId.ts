@@ -27,3 +27,6 @@ export const RandomId: () => string = () => {
     ID.substring(0, randomIndex) + emoji + ID.substring(randomIndex);
   return newID;
 };
+
+export const RandomFiveLengthBinary = () =>
+  Math.random().toString(2).slice(2, 7);

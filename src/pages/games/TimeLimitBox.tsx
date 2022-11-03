@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ChaosGameSettingsType } from "../../models/chaosGameType";
-import InputSimpler from "../../components/InputSimpler";
+import GenericModal from "../../components/GenericModal";
+import TimeLimitModal from "./TimeLimitModal";
 
 type Props = {
   gameSettings: ChaosGameSettingsType;
@@ -8,22 +9,19 @@ type Props = {
 };
 
 const TimeLimitBox = ({ gameSettings, setGameSettings }: Props) => {
-  const [isError, setIsError] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    // validation
-    if (gameSettings.timeLimitMin <= 0) {
-      setIsError(true);
-    } else if (gameSettings.timeLimitMin > 300) {
-      setIsError(true);
-    } else {
-      setIsError(false);
-    }
-  }, [gameSettings.timeLimitMin]);
-
+  const handleClose = () => {
+    setIsModalOpen(false);
+  };
   return (
-    <div>
-      <h2>⏳ time limit </h2>
+    <div
+      style={{
+        marginTop: "36px",
+        marginBottom: "36px",
+      }}
+    >
+      <h2>λ time limit </h2>
       <div
         style={{
           width: "200px",
@@ -32,19 +30,39 @@ const TimeLimitBox = ({ gameSettings, setGameSettings }: Props) => {
           justifyContent: "space-between",
         }}
       >
-        <InputSimpler
-          value={gameSettings.timeLimitMin}
-          error={isError}
-          onChange={(e: any) => {
-            setGameSettings({
-              ...gameSettings,
-              timeLimitMin: parseInt(e.target.value),
-            });
+        <div
+          onClick={() => {
+            setIsModalOpen(true);
           }}
-          type="number"
-        />
-        min
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+            color: "green",
+            height: "100%",
+            width: "128px",
+            backgroundColor: "#f5f5f5",
+          }}
+        >
+          modify
+        </div>
+        <div>{gameSettings.timeLimitMin} min</div>
       </div>
+
+      <GenericModal
+        open={isModalOpen}
+        title={"😱 time limit"}
+        handleClose={handleClose}
+        gameSettings={gameSettings}
+        setGameSettings={setGameSettings}
+      >
+        <TimeLimitModal
+          gameSettings={gameSettings}
+          setGameSettings={setGameSettings}
+          onClose={handleClose}
+        />
+      </GenericModal>
     </div>
   );
 };

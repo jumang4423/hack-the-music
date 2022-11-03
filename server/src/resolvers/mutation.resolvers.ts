@@ -1,10 +1,13 @@
-import { Theme, Sample } from "../generated/graphql";
+import { Theme, Sample, Image } from "../generated/graphql";
 import { InsertGroupApp } from "../application/insertGroup.app";
 import { RandomThemeApp } from "../application/randomTheme.app";
 import { RandomSampleApp } from "../application/randomSample.app";
+import { RandomImageApp } from "../application/randomImage.app";
+import { RandomImagesApp } from "../application/randomImages.app";
 import { UploadThemeApp } from "../application/uploadTheme.app";
 import { UploadSampleApp } from "../application/uploadSample.app";
 import { Group, MutationResolvers } from "../generated/graphql";
+import { UploadImageApp } from "../application/uploadImage.app";
 
 export const mutationResolvers: MutationResolvers = {
   insertGroup: async (_, { groupId, name, gameMode }): Promise<Group> => {
@@ -49,6 +52,21 @@ export const mutationResolvers: MutationResolvers = {
 
     return vle!;
   },
+  uploadImage: async (
+    _,
+    { url, description, idUploadedBy }
+  ): Promise<Image> => {
+    const [vle, err] = await UploadImageApp({
+      url,
+      description,
+      idUploadedBy,
+    } as Image);
+    if (err.IsError()) {
+      throw err.GetError();
+    }
+
+    return vle!;
+  },
   randomTheme: async (): Promise<Theme> => {
     const [vle, err] = await RandomThemeApp();
     if (err.IsError()) {
@@ -64,5 +82,22 @@ export const mutationResolvers: MutationResolvers = {
     }
 
     return vle!;
+  },
+  randomImage: async (): Promise<Image> => {
+    const [vle, err] = await RandomImageApp();
+    if (err.IsError()) {
+      throw err.GetError();
+    }
+
+    return vle!;
+  },
+  randomImages: async (_, { count }): Promise<Image[]> => {
+    const [vle, err] = await RandomImagesApp({ count });
+    if (err.IsError()) {
+      console.log(err.GetError());
+      throw err.GetError();
+    }
+
+    return vle;
   },
 };

@@ -5,14 +5,13 @@ import { FormControlLabel } from "@mui/material";
 import { Checkbox } from "@mui/material";
 import {
   RandomThemeEanbleCheckboxHandleChange,
-  RandomThemeManuallyAddButtonHandleClick,
   RandomThemeDataHandle,
 } from "./fun_RandomTheme";
 import { useMutation } from "@apollo/client";
-import { Button } from "@mui/material";
+import HackyButton from "../../../components/HackyButton";
 import { GET_RANDOM_THEME } from "../../../fun/apis";
 import { useCookies } from "react-cookie";
-import UploaderModal from "../../../components/UploaderModal";
+import GenericModal from "../../../components/GenericModal";
 import ThemeUploaderModal from "./ThemeUploaderModal";
 
 type Props = {
@@ -102,35 +101,38 @@ const RandomTheme = ({ gameSettings, setGameSettings }: Props) => {
           >
             <div
               style={{
-                margin: "4px 4px 4px 0px",
+                margin: "0px 4px 4px 0px",
               }}
               hidden={gameSettings.randomTheme.themes.length >= 5}
             >
-              <Button variant="outlined" onClick={() => setOpen(true)}>
-                ＋
-              </Button>
+              <HackyButton
+                name={"＋"}
+                onClick={() => {
+                  setOpen(true);
+                }}
+              />
             </div>
             <div
               style={{
-                margin: "8px",
+                margin: "4px 8px 8px 8px",
               }}
               hidden={gameSettings.randomTheme.themes.length >= 5}
             >
-              <Button
-                variant="contained"
+              <HackyButton
+                prefer={true}
+                name={loading ? "loading..." : "🌏 random theme"}
                 onClick={() => {
-                  try {
-                    GetTheme();
-                  } catch (error) {
-                    console.log(error);
-                  }
+                  GetTheme({
+                    variables: {
+                      id: cookies.id,
+                    },
+                  });
                 }}
-              >
-                {loading ? "loading" : "🌏 random theme"}
-              </Button>
+              />
             </div>
           </div>
-          <UploaderModal
+
+          <GenericModal
             open={open}
             title={"🚢 upload theme"}
             handleClose={handleClose}
@@ -144,7 +146,7 @@ const RandomTheme = ({ gameSettings, setGameSettings }: Props) => {
                 onClose={handleClose}
               />
             </div>
-          </UploaderModal>
+          </GenericModal>
         </div>
       )}
     </div>

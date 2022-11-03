@@ -5,7 +5,12 @@ import { ChaosGameSettingsType } from "../../../models/chaosGameType";
 import { Button } from "@mui/material";
 import InputSimpler from "../../../components/InputSimpler";
 import { useCookies } from "react-cookie";
-import { Cookie } from "universal-cookie";
+import { useMutation } from "@apollo/client";
+import { INSERT_THEME } from "../../../fun/apis";
+import {
+  OnThemeFetch,
+  ThemeUploaderFormvalidation,
+} from "./fun_ThemeUploaderModal";
 
 type Props = {
   gameSettings: ChaosGameSettingsType;
@@ -18,31 +23,18 @@ const ThemeUploaderModal = ({
   setGameSettings,
   onClose,
 }: Props) => {
+  const [cookies] = useCookies();
+  const [InsertTheme, { loading }] = useMutation(INSERT_THEME, {
+    onCompleted({ uploadTheme }) {
+      OnThemeFetch(uploadTheme, gameSettings, setGameSettings, onClose);
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
   const [theme, setTheme] = useState("");
   const [description, setDescription] = useState<string>("");
   const [themeError, setThemeError] = useState<boolean>(false);
-  const [isUploading, setIsUploading] = useState<boolean>(false);
-  const [cookies] = useCookies();
-
-  const onThemeUpload = async (cookie: Cookie) => {
-    if (theme === "") {
-      setThemeError(true);
-      return;
-    }
-    setThemeError(false);
-    setIsUploading(true);
-    // TODO: mutate to the server
-    const newGameSettings = Object.assign({}, gameSettings);
-    newGameSettings.randomTheme.themes.push({
-      content: theme,
-      description,
-      idUploadedBy: cookie.userId,
-    });
-    setGameSettings(newGameSettings);
-    setIsUploading(false);
-
-    onClose();
-  };
 
   return (
     <div style={{}}>
@@ -99,10 +91,36 @@ const ThemeUploaderModal = ({
       <DialogActions>
         <Button
           onClick={() => {
-            onThemeUpload(cookies);
+            ThemeUploaderFormvalidation(theme, setThemeError) &&
+              OnThemeFetch(
+                {
+                  content: theme,
+                  description: description,
+                  idUploadedBy: "",
+                },
+                gameSettings,
+                setGameSettings,
+                onClose
+              );
           }}
         >
-          {isUploading ? "uploading..." : "upload"}
+          just locally
+        </Button>
+        <Button
+          variant="contained"
+          disabled={loading}
+          onClick={() => {
+            ThemeUploaderFormvalidation(theme, setThemeError) &&
+              InsertTheme({
+                variables: {
+                  content: theme,
+                  description: description,
+                  idUploadedBy: cookies.userId ?? "anonymous",
+                },
+              });
+          }}
+        >
+          {loading ? "uploading..." : "upload"}
         </Button>
       </DialogActions>
     </div>

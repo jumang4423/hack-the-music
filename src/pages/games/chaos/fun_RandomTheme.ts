@@ -1,4 +1,4 @@
-import { Theme } from "../../../fun_main";
+import { Theme } from "../../../gql/graphql";
 import { ChaosGameSettingsType } from "../../../models/chaosGameType";
 
 export const RandomThemeEanbleCheckboxHandleChange = (
