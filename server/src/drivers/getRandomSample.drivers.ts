@@ -5,11 +5,9 @@ import { doc, getDoc } from "firebase/firestore";
 import { ErrsEnumeration } from "../util/err.util";
 
 export const GetRandomSampleDriver = async (
-  length: number
+  randomIndex: number
 ): Promise<[Sample | null, ErrStr]> => {
   const db = FireStoreApp;
-  // 0 ~ length - 1
-  const randomIndex = Math.floor(Math.random() * length);
 
   try {
     const docRef = doc(db, "samples", `sample_${randomIndex}`);

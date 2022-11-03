@@ -1,0 +1,34 @@
+import ErrStr from "../../domain/ErrStr.domain";
+import { Sample } from "../../generated/graphql";
+import { SampleRepository } from "./interface/repository.usecase";
+import { GetRandomSampleDriver } from "../../drivers/getRandomSample.drivers";
+import { GetCollLenDriver } from "../../drivers/getCollLen.drivers";
+import { InsertSampleDriver } from "../../drivers/insertSample.drivers";
+
+export class GqlSampleRepository implements SampleRepository {
+  public async getRandomSample(): Promise<[Sample | null, ErrStr]> {
+    const [sampleGlobalLenCached, err] = await GetCollLenDriver("samples");
+    if (err.IsError()) {
+      return [null, err];
+    }
+    const randomIndex = Math.floor(Math.random() * sampleGlobalLenCached);
+    const [randomSample, err2] = await GetRandomSampleDriver(randomIndex);
+    if (err2.IsError()) {
+      return [null, err2];
+    }
+
+    return [randomSample, new ErrStr({ isErr: false })];
+  }
+
+  public async uploadSample(sample: Sample): Promise<[Sample | null, ErrStr]> {
+    const [sampleGlobalLenCached, err] = await GetCollLenDriver("samples");
+    if (err.IsError()) {
+      return [null, err];
+    }
+    const [_, err2] = await InsertSampleDriver(sample, sampleGlobalLenCached);
+    if (err2.IsError()) {
+      return [null, err];
+    }
+    return [sample, new ErrStr({ isErr: false })];
+  }
+}

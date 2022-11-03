@@ -6,4 +6,5 @@ export const ErrsEnumeration = {
   DOC_NOT_FOUND: "document not found",
   ENOUGH_IMAGE_INSERTED: "not enough images inserted",
   MAX_QUERY_NUMBER_IS_10: "max query number is 10",
+  ARGS_NOT_VALID: "arguments are not valid",
 };

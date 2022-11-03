@@ -62,10 +62,9 @@ const SampleUploaderModal = ({
         >
           {!file && (
             <FilePicker
-              extensions={["mp3"]}
+              extensions={["mp3", "wav"]}
               maxSize={5}
               onChange={(FileObject: File) => {
-                FileObject.type === "audio/mp3";
                 setFile(FileObject);
               }}
               onError={(errMsg: string) => alert(errMsg)}

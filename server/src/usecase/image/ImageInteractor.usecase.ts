@@ -1,0 +1,74 @@
+import { ImageRepository } from "./interface/repository.usecase";
+import ErrStr from "../../domain/ErrStr.domain";
+import { ErrsEnumeration } from "../../util/err.util";
+import { Image } from "../../generated/graphql";
+import { Maybe } from "graphql/jsutils/Maybe";
+
+export class ImageInteractor {
+  private readonly imageRepository: ImageRepository;
+  private response: any;
+  private err: ErrStr;
+
+  constructor(imageRepository: ImageRepository) {
+    this.imageRepository = imageRepository;
+    this.err = new ErrStr({});
+  }
+
+  handleUploadImage = async (args: {
+    url: string;
+    description: Maybe<string>;
+    idUploadedBy: string;
+  }) => {
+    const { url, description, idUploadedBy } = args;
+    // validate
+    if (url === undefined || idUploadedBy === undefined) {
+      this.err.ToError(ErrsEnumeration.ARGS_NOT_VALID);
+      return void 0;
+    }
+    const [image, err] = await this.imageRepository.uploadImage({
+      url,
+      description,
+      idUploadedBy,
+    } as Image);
+    this.response = image;
+    this.err = err;
+  };
+
+  handleGetRandomImage = async () => {
+    const [image, err] = await this.imageRepository.getRandomImage();
+    this.response = image;
+    this.err = err;
+  };
+
+  handleGetRandomImages = async (args: { count: number }) => {
+    const { count } = args;
+    // validate
+    if (count > 10) {
+      this.err.ToError(ErrsEnumeration.MAX_QUERY_NUMBER_IS_10);
+    }
+    const [images, err] = await this.imageRepository.getRandomImages(count);
+    this.response = images;
+    this.err = err;
+  };
+
+  getResponseUploadImage = (): Image => {
+    if (this.err.IsError()) {
+      throw new Error(this.err.GetError());
+    }
+    return this.response!;
+  };
+
+  getResponseGetRandomImage = (): Image => {
+    if (this.err.IsError()) {
+      throw new Error(this.err.GetError());
+    }
+    return this.response!;
+  };
+
+  getResponseGetRandomImages = (): Array<Image> => {
+    if (this.err.IsError()) {
+      throw new Error(this.err.GetError());
+    }
+    return this.response!;
+  };
+}
