@@ -10,8 +10,11 @@ import { createTheme } from "@mui/material/styles";
 import { lightGreen, yellow } from "@mui/material/colors";
 import { ThemeProvider } from "@mui/material/styles";
 
+const localURL = "http://localhost:4000/graphql";
+const prodURL = "https://htm-backend.onrender.com/graphql";
+
 const client = new ApolloClient({
-  uri: "http://localhost:4000/graphql",
+  uri: process.env.NODE_ENV === "development" ? localURL : prodURL,
   cache: new InMemoryCache(),
 });
 
