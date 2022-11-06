@@ -1,0 +1,10 @@
+type Props = {
+  modalOpen: boolean;
+  setModalOpen: (boolean) => void;
+};
+
+const AuthModalOpen = ({ modalOpen, setModalOpen }: Props) => {
+  return <></>;
+};
+
+export default AuthModalOpen;

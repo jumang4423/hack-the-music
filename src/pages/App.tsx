@@ -4,25 +4,28 @@ import "./App.css";
 import GameModal from "./GameModal";
 import { GameModeEnum } from "../models/gameMode";
 import Form from "./Form";
+import { Group } from "../gql/graphql";
+import AuthModal from "./AuthModal";
 
-export type Group = {
-  groupId: string;
-  name: string;
-  gameMode: GameModeEnum;
+export const GroupDefault: Group = {
+  groupId: "",
+  name: "",
+  gameMode: GameModeEnum.chaos,
+  adminUserId: "",
 };
 
 function App() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [isNewUser, setIsNewUser] = useState(false);
   const [gameModalOpen, setGameModalOpen] = useState(false);
-  const [group, setGroup] = useState<Group>({
-    groupId: "",
-    name: "",
-    gameMode: GameModeEnum.chaos,
-  });
+  const [group, setGroup] = useState<Group>(GroupDefault);
+  const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (group.groupId !== "") {
       setGameModalOpen(true);
+    } else {
+      setGameModalOpen(false);
     }
   }, [group]);
 
@@ -33,6 +36,7 @@ function App() {
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         setGroup={setGroup}
+        setIsNewUser={setIsNewUser}
       />
 
       <GameModal
@@ -40,7 +44,10 @@ function App() {
         setModalOpen={setGameModalOpen}
         group={group}
         setGroup={setGroup}
+        isNewUser={isNewUser}
       />
+
+      <AuthModal modalOpen={authModalOpen} setModalOpen={setAuthModalOpen} />
     </div>
   );
 }

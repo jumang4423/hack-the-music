@@ -10,10 +10,13 @@ import { GqlThemeRepository } from "../repository/theme/GqlThemeRepository.repos
 import { ThemeInteractor } from "../usecase/theme/ThemeInteractor.usecase";
 
 export const mutationResolvers: MutationResolvers = {
-  insertGroup: async (_, { groupId, name, gameMode }): Promise<Group> => {
+  insertGroup: async (
+    _,
+    { groupId, name, gameMode, adminUserId }
+  ): Promise<Group> => {
     const repository = new GqlGroupRepository();
     const usecase = new GroupInteractor(repository);
-    await usecase.handleInsertGroup({ groupId, name, gameMode });
+    await usecase.handleInsertGroup({ groupId, name, gameMode, adminUserId });
     return usecase.getResponseInsertGroup();
   },
   uploadTheme: async (

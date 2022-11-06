@@ -8,18 +8,21 @@ import { GameModeEnum } from "../models/gameMode";
 import { useMutation } from "@apollo/client";
 import { INSERT_GROUP } from "../fun/apis";
 import HackyButton from "../components/HackyButton";
-import { Group } from "./App";
+import { Group } from "../gql/graphql";
+import { useCookies } from "react-cookie";
 
 type Props = {
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;
   setGroup: (group: Group) => void;
+  setIsNewUser: (isNewUser: boolean) => void;
 };
 
 const NewSessionModal: React.FC<Props> = ({
   modalOpen,
   setModalOpen,
   setGroup,
+  setIsNewUser,
 }) => {
   type formType = {
     groupIdBox: string;
@@ -34,6 +37,7 @@ const NewSessionModal: React.FC<Props> = ({
     gameMode: GameModeEnum.chaos,
   });
   const [insertGroup, { data, loading, error }] = useMutation(INSERT_GROUP);
+  const [cookies, setCookie, removeCookie] = useCookies();
 
   useEffect(() => {
     modalOpen && setFormData({ ...formData, groupIdBox: RandomId() });
@@ -42,6 +46,8 @@ const NewSessionModal: React.FC<Props> = ({
   useEffect(() => {
     if (data) {
       setGroup(data.insertGroup);
+      console.log(data.insertGroup);
+      setIsNewUser(true);
 
       // navigate
       setModalOpen(false);
@@ -51,7 +57,10 @@ const NewSessionModal: React.FC<Props> = ({
   const onCreateSession = async () => {
     // check name is not empty
     setFormData({ ...formData, nameBoxError: formData.nameBox === "" });
-    if (formData.nameBox === "") {
+    if (formData.nameBox.length > 30) {
+      alert("Name must be less than 30 characters");
+    }
+    if (formData.nameBox === "" || formData.nameBox.length > 30) {
       return;
     }
 
@@ -61,6 +70,7 @@ const NewSessionModal: React.FC<Props> = ({
         groupId: formData.groupIdBox,
         name: formData.nameBox,
         gameMode: Number(formData.gameMode),
+        adminUserId: cookies["userId"],
       },
     });
   };
@@ -86,7 +96,7 @@ const NewSessionModal: React.FC<Props> = ({
         >
           <div
             style={{
-              padding: "1rem 4rem 1rem 4rem",
+              padding: "1rem 2rem 1rem 2rem",
             }}
           >
             <h1
@@ -95,7 +105,7 @@ const NewSessionModal: React.FC<Props> = ({
                 marginBottom: "3rem",
               }}
             >
-              # create a new group
+              # 🍀 create a new group
             </h1>
             <InputSimpler
               title="group id"

@@ -12,13 +12,16 @@ import GenericModal from "../../../components/GenericModal";
 import HackyButton from "../../../components/HackyButton";
 import ImageInputBox from "./ImageInputBox";
 import ImageUploaderModal from "./ImageUploaderModal";
+import { Group } from "../../../gql/graphql";
+import { IsMeAdminRn } from "../../../fun/isMeAdminRn";
 
 type Props = {
+  group: Group;
   gameSettings: ChaosGameSettingsType;
   setGameSettings: (gameSettings: ChaosGameSettingsType) => void;
 };
 
-const RandomImage = ({ gameSettings, setGameSettings }: Props) => {
+const RandomImage = ({ group, gameSettings, setGameSettings }: Props) => {
   const [GetImage, { loading }] = useMutation(GET_RANDOM_IMAGE, {
     onCompleted({ randomImage }) {
       RandomImageDataHandle(randomImage, gameSettings, setGameSettings);
@@ -26,6 +29,9 @@ const RandomImage = ({ gameSettings, setGameSettings }: Props) => {
   });
 
   const [open, setOpen] = useState(false);
+  const viewState = {
+    isMeAdminRn: IsMeAdminRn(group),
+  };
 
   const handleClose = () => {
     setOpen(false);
@@ -35,7 +41,7 @@ const RandomImage = ({ gameSettings, setGameSettings }: Props) => {
     <div>
       <h3
         style={{
-          marginTop: "-10px",
+          marginTop: "-16px",
           marginBottom: "16px",
         }}
       >
@@ -59,6 +65,7 @@ const RandomImage = ({ gameSettings, setGameSettings }: Props) => {
           />
         }
         label="enabled"
+        disabled={!viewState.isMeAdminRn}
       />
 
       <div hidden={!gameSettings.randomImages.enabled}>
@@ -75,6 +82,7 @@ const RandomImage = ({ gameSettings, setGameSettings }: Props) => {
             return (
               <div key={index}>
                 <ImageInputBox
+                  IsMeAdminRn={viewState.isMeAdminRn}
                   index={index}
                   gameSettings={gameSettings}
                   setGameSettings={setGameSettings}
@@ -95,7 +103,10 @@ const RandomImage = ({ gameSettings, setGameSettings }: Props) => {
             style={{
               margin: "0px 4px 4px 0px",
             }}
-            hidden={gameSettings.randomImages.images.length >= 5}
+            hidden={
+              gameSettings.randomImages.images.length >= 5 ||
+              !viewState.isMeAdminRn
+            }
           >
             <HackyButton
               name={"＋"}
@@ -108,7 +119,10 @@ const RandomImage = ({ gameSettings, setGameSettings }: Props) => {
             style={{
               margin: "4px 8px 8px 8px",
             }}
-            hidden={gameSettings.randomImages.images.length >= 5}
+            hidden={
+              gameSettings.randomImages.images.length >= 5 ||
+              !viewState.isMeAdminRn
+            }
           >
             <HackyButton
               prefer={true}
@@ -124,8 +138,6 @@ const RandomImage = ({ gameSettings, setGameSettings }: Props) => {
           open={open}
           title={"🚢 upload image file"}
           handleClose={handleClose}
-          gameSettings={gameSettings}
-          setGameSettings={setGameSettings}
         >
           <ImageUploaderModal
             gameSettings={gameSettings}

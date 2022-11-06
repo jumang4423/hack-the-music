@@ -1,0 +1,38 @@
+type PlayerProps = {
+  url: string;
+};
+
+const Downloader = ({ url }: PlayerProps) => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "64px",
+        width: "64px",
+        cursor: "pointer",
+      }}
+    >
+      <a href={url!} download>
+        <div
+          style={{
+            background: "#f5f5f5",
+            width: "32px",
+            height: "32px",
+            marginTop: "16px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          onClick={() => {}}
+        >
+          {"🗂"}
+        </div>
+      </a>
+    </div>
+  );
+};
+
+export default Downloader;

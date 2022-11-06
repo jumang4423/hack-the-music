@@ -1,0 +1,10 @@
+// @ts-ignore
+import Cookies from "js-cookie";
+
+export const RemoveAllCookies = (removeCookie: (name: string) => void) => {
+  const killList = ["user", "accessToken", "userId"];
+
+  killList.forEach((cookieName) => {
+    removeCookie(cookieName);
+  });
+};

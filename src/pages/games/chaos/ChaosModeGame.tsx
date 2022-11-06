@@ -1,4 +1,4 @@
-import { Group } from "../../App";
+import { Group } from "../../../gql/graphql";
 import { ChaosGameSettingsType } from "../../../models/chaosGameType";
 import ChaosWindow from "./ChaosWindow";
 
@@ -30,7 +30,7 @@ const ChaosModeGame = ({
                   marginTop: "36px",
                 }}
               >
-                λ chaos mode
+                λ= chaos mode
               </h2>
 
               <ChaosWindow

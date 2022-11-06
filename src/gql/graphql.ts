@@ -22,6 +22,7 @@ export enum CacheControlScope {
 
 export type Group = {
   __typename?: 'Group';
+  adminUserId: Scalars['String'];
   gameMode: Scalars['Int'];
   groupId: Scalars['String'];
   name: Scalars['String'];
@@ -48,6 +49,7 @@ export type Mutation = {
 
 
 export type MutationInsertGroupArgs = {
+  adminUserId: Scalars['String'];
   gameMode: Scalars['Int'];
   groupId: Scalars['String'];
   name: Scalars['String'];

@@ -4,9 +4,15 @@ type Props = {
   index: number;
   gameSettings: ChaosGameSettingsType;
   setGameSettings: (gameSettings: ChaosGameSettingsType) => void;
+  IsMeAdminRn: boolean;
 };
 
-const ThemeInputBox = ({ index, gameSettings, setGameSettings }: Props) => {
+const ThemeInputBox = ({
+  index,
+  gameSettings,
+  setGameSettings,
+  IsMeAdminRn,
+}: Props) => {
   return (
     <div
       style={{
@@ -17,28 +23,29 @@ const ThemeInputBox = ({ index, gameSettings, setGameSettings }: Props) => {
         flexDirection: "row",
       }}
     >
-      <div
-        onClick={() => {
-          const newGameSettings = { ...gameSettings };
-          newGameSettings.randomTheme.themes.splice(index, 1);
-          setGameSettings(newGameSettings);
-        }}
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-          color: "red",
-          height: "100%",
-          width: "128px",
-          marginTop: "16px",
-          backgroundColor: "#f5f5f5",
-          marginRight: "16px",
-        }}
-      >
-        delete
-      </div>
-
+      {IsMeAdminRn && (
+        <div
+          onClick={() => {
+            const newGameSettings = { ...gameSettings };
+            newGameSettings.randomTheme.themes.splice(index, 1);
+            setGameSettings(newGameSettings);
+          }}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+            color: "red",
+            height: "100%",
+            width: "128px",
+            marginTop: "16px",
+            backgroundColor: "#f5f5f5",
+            marginRight: "16px",
+          }}
+        >
+          delete
+        </div>
+      )}
       <div
         style={{
           width: "60%",
@@ -50,6 +57,7 @@ const ThemeInputBox = ({ index, gameSettings, setGameSettings }: Props) => {
             justifyContent: "space-between",
             alignItems: "center",
             margin: "12px",
+            textDecoration: "underline",
           }}
         >
           {gameSettings.randomTheme.themes[index].content}

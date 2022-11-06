@@ -17,10 +17,16 @@ export class GroupInteractor {
     groupId: string;
     name: string;
     gameMode: number;
+    adminUserId: string;
   }) => {
-    const { groupId, name, gameMode } = args;
+    const { groupId, name, gameMode, adminUserId } = args;
     // validate
-    if (groupId === undefined || name === undefined || gameMode === undefined) {
+    if (
+      groupId === undefined ||
+      name === undefined ||
+      gameMode === undefined ||
+      adminUserId === undefined
+    ) {
       this.err.ToError(ErrsEnumeration.ARGS_NOT_VALID);
       return void 0;
     }
@@ -28,6 +34,7 @@ export class GroupInteractor {
       groupId,
       name,
       gameMode,
+      adminUserId,
     } as Group);
     this.response = group;
     this.err = err;

@@ -14,6 +14,7 @@ export type Scalars = {
 
 export type Group = {
   __typename?: 'Group';
+  adminUserId: Scalars['String'];
   gameMode: Scalars['Int'];
   groupId: Scalars['String'];
   name: Scalars['String'];
@@ -40,6 +41,7 @@ export type Mutation = {
 
 
 export type MutationInsertGroupArgs = {
+  adminUserId: Scalars['String'];
   gameMode: Scalars['Int'];
   groupId: Scalars['String'];
   name: Scalars['String'];
@@ -199,6 +201,7 @@ export type ResolversParentTypes = ResolversObject<{
 }>;
 
 export type GroupResolvers<ContextType = any, ParentType extends ResolversParentTypes['Group'] = ResolversParentTypes['Group']> = ResolversObject<{
+  adminUserId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   gameMode?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   groupId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -213,7 +216,7 @@ export type ImageResolvers<ContextType = any, ParentType extends ResolversParent
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  insertGroup?: Resolver<ResolversTypes['Group'], ParentType, ContextType, RequireFields<MutationInsertGroupArgs, 'gameMode' | 'groupId' | 'name'>>;
+  insertGroup?: Resolver<ResolversTypes['Group'], ParentType, ContextType, RequireFields<MutationInsertGroupArgs, 'adminUserId' | 'gameMode' | 'groupId' | 'name'>>;
   randomImage?: Resolver<ResolversTypes['Image'], ParentType, ContextType>;
   randomImages?: Resolver<Array<Maybe<ResolversTypes['Image']>>, ParentType, ContextType, RequireFields<MutationRandomImagesArgs, 'count'>>;
   randomSample?: Resolver<ResolversTypes['Sample'], ParentType, ContextType>;

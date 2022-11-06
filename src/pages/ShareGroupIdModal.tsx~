@@ -1,0 +1,59 @@
+import { ChaosGameSettingsType } from "../models/chaosGameType";
+import { Group } from "../gql/graphql";
+import GenericModal from "../components/GenericModal";
+import { Tooltip } from "@mui/material";
+
+type Props = {
+  gameSettings: ChaosGameSettingsType;
+  setGameSettings: (gameSettings: ChaosGameSettingsType) => void;
+  group: Group;
+  isGroupIdModalOpen: boolean;
+  setIsGroupIdModalOpen: (isGroupIdModalOpen: boolean) => void;
+};
+
+const ShareGroupIdModal = ({
+  gameSettings,
+  setGameSettings,
+  group,
+  isGroupIdModalOpen,
+  setIsGroupIdModalOpen,
+}: Props) => {
+  return (
+    <GenericModal
+      open={isGroupIdModalOpen}
+      handleClose={() => setIsGroupIdModalOpen(false)}
+      title={`👋 welcome to ${group.name}`}
+      gameSettings={gameSettings}
+      setGameSettings={setGameSettings}
+    >
+      <div
+        style={{
+          margin: "0rem 2rem 0rem 2rem",
+        }}
+      >
+        share your group id with your friends to join the group
+      </div>
+      <Tooltip title="click to copy group id" placement="bottom">
+        <h2
+          style={{
+            width: "100%",
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "2rem",
+            cursor: "pointer",
+            color: "yellowgreen",
+          }}
+          onClick={() => {
+            navigator.clipboard.writeText(group.groupId);
+            handleClose();
+          }}
+        >
+          {group.groupId}
+        </h2>
+      </Tooltip>
+    </GenericModal>
+  );
+};
+
+export default ShareGroupIdModal;

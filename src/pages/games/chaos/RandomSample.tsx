@@ -12,30 +12,34 @@ import { useMutation } from "@apollo/client";
 import { GET_RANDOM_SAMPLE } from "../../../fun/apis";
 import GenericModal from "../../../components/GenericModal";
 import SampleUploaderModal from "./SampleUploaderModal";
+import { IsMeAdminRn } from "../../../fun/isMeAdminRn";
+import { Group } from "../../../gql/graphql";
 
 type Props = {
+  group: Group;
   gameSettings: ChaosGameSettingsType;
   setGameSettings: (gameSettings: ChaosGameSettingsType) => void;
 };
 
-const RandomSample = ({ gameSettings, setGameSettings }: Props) => {
+const RandomSample = ({ group, gameSettings, setGameSettings }: Props) => {
   const [GetSample, { loading }] = useMutation(GET_RANDOM_SAMPLE, {
     onCompleted({ randomSample }) {
       RandomSampleDataHandle(randomSample, gameSettings, setGameSettings);
     },
   });
-
   const [open, setOpen] = useState(false);
-
   const handleClose = () => {
     setOpen(false);
+  };
+  const viewState = {
+    isMeAdminRn: IsMeAdminRn(group),
   };
 
   return (
     <div>
       <h3
         style={{
-          marginTop: "-10px",
+          marginTop: "-16px",
           marginBottom: "16px",
         }}
       >
@@ -59,6 +63,7 @@ const RandomSample = ({ gameSettings, setGameSettings }: Props) => {
           />
         }
         label="enabled"
+        disabled={!viewState.isMeAdminRn}
       />
 
       <div hidden={!gameSettings.randomSamples.enabled}>
@@ -75,6 +80,7 @@ const RandomSample = ({ gameSettings, setGameSettings }: Props) => {
             return (
               <div key={index}>
                 <SampleInputBox
+                  IsMeAdminRn={viewState.isMeAdminRn}
                   index={index}
                   gameSettings={gameSettings}
                   setGameSettings={setGameSettings}
@@ -95,7 +101,10 @@ const RandomSample = ({ gameSettings, setGameSettings }: Props) => {
             style={{
               margin: "0px 4px 4px 0px",
             }}
-            hidden={gameSettings.randomSamples.samples.length >= 5}
+            hidden={
+              gameSettings.randomSamples.samples.length >= 5 ||
+              !viewState.isMeAdminRn
+            }
           >
             <HackyButton
               name={"＋"}
@@ -108,7 +117,10 @@ const RandomSample = ({ gameSettings, setGameSettings }: Props) => {
             style={{
               margin: "4px 8px 8px 8px",
             }}
-            hidden={gameSettings.randomSamples.samples.length >= 5}
+            hidden={
+              gameSettings.randomSamples.samples.length >= 5 ||
+              !viewState.isMeAdminRn
+            }
           >
             <HackyButton
               prefer={true}
@@ -124,8 +136,6 @@ const RandomSample = ({ gameSettings, setGameSettings }: Props) => {
           open={open}
           title={"🚢 upload sample file"}
           handleClose={handleClose}
-          gameSettings={gameSettings}
-          setGameSettings={setGameSettings}
         >
           <div>
             <SampleUploaderModal

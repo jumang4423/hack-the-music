@@ -35,6 +35,7 @@ const HackyButton = ({
         backgroundColor: ColorObj.lightGray,
         color: textColor(),
         cursor: isDisabled ? "not-allowed" : "pointer",
+        pointerEvents: isDisabled ? "none" : "auto",
         ...style,
       }}
       onClick={onClick}

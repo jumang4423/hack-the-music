@@ -2,6 +2,7 @@ type Group {
    groupId: String!
    name: String!
    gameMode: Int!
+   adminUserId: String!
  }
  
 type Theme {
@@ -28,7 +29,7 @@ type Query {
 }
 
 type Mutation {
-  insertGroup(groupId: String!, name: String!, gameMode: Int!): Group!
+  insertGroup(groupId: String!, name: String!, gameMode: Int!, adminUserId: String!): Group!
   uploadTheme(content: String!, description: String, idUploadedBy: String!): Theme!
   uploadSample(url: String!, description: String, idUploadedBy: String!): Sample!
   uploadImage(url: String!, description: String, idUploadedBy: String!): Image!

@@ -1,27 +1,27 @@
-import { Group } from "./App";
 import { useState, useEffect } from "react";
 import { Input } from "@mui/material";
 import { ColorObj } from "../models/color";
 import { useQuery } from "@apollo/client";
 import { GET_GROUP } from "../fun/apis";
 import HackyButton from "../components/HackyButton";
+import { Group } from "../gql/graphql";
+import { RemoveAllCookies } from "../fun/removeAllCookie";
+import { getAuth, signOut } from "firebase/auth";
 
 type Props = {
   setGroup: (group: Group) => void;
   setModalOpen: (open: boolean) => void;
 };
 
+type formType = { groupIdBox: string; groupIdBoxError: boolean };
+
 const Form = ({ setGroup, setModalOpen }: Props) => {
-  type formType = {
-    groupIdBox: string;
-    groupIdBoxError: boolean;
-  };
   const [formData, setFormData] = useState<formType>({
     groupIdBox: "",
     groupIdBoxError: false,
   });
 
-  const { data, loading, error, refetch } = useQuery(GET_GROUP);
+  const { data, loading, refetch } = useQuery(GET_GROUP, {});
 
   useEffect(() => {
     if (data) {
@@ -94,13 +94,28 @@ const Form = ({ setGroup, setModalOpen }: Props) => {
         <p
           style={{
             cursor: "pointer",
-            color: ColorObj.black,
+            color: "yellowgreen",
           }}
           onClick={() => {
             setModalOpen(true);
           }}
         >
-          {"->"} or create a new group
+          {"->"} 🍀 create a new group
+        </p>
+        <p
+          style={{
+            cursor: "pointer",
+            color: ColorObj.gray,
+            marginTop: "-0.7rem",
+          }}
+          onClick={() => {
+            RemoveAllCookies();
+            signOut(getAuth()).then(() => {
+              window.location.reload();
+            });
+          }}
+        >
+          {"->"} or logout right now
         </p>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { ChaosGameSettingsType } from "../../../models/chaosGameType";
-import { Group } from "../../App";
+import { Group } from "../../../gql/graphql";
 import { Tabs } from "@mui/material";
 import { Tab } from "@mui/material";
 import { Box } from "@mui/material";
@@ -53,7 +53,7 @@ const ChaosWindow = ({
   };
 
   return (
-    <div>
+    <div style={{}}>
       <Box
         sx={{
           flexGrow: 1,
@@ -93,18 +93,21 @@ const ChaosWindow = ({
         </Tabs>
         <TabPanel value={themeViewing} index={0}>
           <RandomTheme
+            group={group}
             gameSettings={gameSettings}
             setGameSettings={setGameSettings}
           />
         </TabPanel>
         <TabPanel value={themeViewing} index={1}>
           <RandomSample
+            group={group}
             gameSettings={gameSettings}
             setGameSettings={setGameSettings}
           />
         </TabPanel>
         <TabPanel value={themeViewing} index={2}>
           <RandomImage
+            group={group}
             gameSettings={gameSettings}
             setGameSettings={setGameSettings}
           />

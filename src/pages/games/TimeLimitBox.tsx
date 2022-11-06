@@ -2,13 +2,16 @@ import { useState } from "react";
 import { ChaosGameSettingsType } from "../../models/chaosGameType";
 import GenericModal from "../../components/GenericModal";
 import TimeLimitModal from "./TimeLimitModal";
+import { Group } from "../../gql/graphql";
+import { IsMeAdminRn } from "../../fun/isMeAdminRn";
 
 type Props = {
+  group: Group;
   gameSettings: ChaosGameSettingsType;
   setGameSettings: (gameSettings: ChaosGameSettingsType) => void;
 };
 
-const TimeLimitBox = ({ gameSettings, setGameSettings }: Props) => {
+const TimeLimitBox = ({ group, gameSettings, setGameSettings }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleClose = () => {
@@ -21,7 +24,7 @@ const TimeLimitBox = ({ gameSettings, setGameSettings }: Props) => {
         marginBottom: "36px",
       }}
     >
-      <h2>λ time limit </h2>
+      <h2>λ= time limit </h2>
       <div
         style={{
           width: "200px",
@@ -39,10 +42,13 @@ const TimeLimitBox = ({ gameSettings, setGameSettings }: Props) => {
             justifyContent: "center",
             alignItems: "center",
             cursor: "pointer",
-            color: "green",
+            color:
+              group.groupId !== "" && IsMeAdminRn(group) ? "green" : "grey",
             height: "100%",
             width: "128px",
             backgroundColor: "#f5f5f5",
+            pointerEvents:
+              group.groupId !== "" && IsMeAdminRn(group) ? "auto" : "none",
           }}
         >
           modify
@@ -54,8 +60,6 @@ const TimeLimitBox = ({ gameSettings, setGameSettings }: Props) => {
         open={isModalOpen}
         title={"😱 time limit"}
         handleClose={handleClose}
-        gameSettings={gameSettings}
-        setGameSettings={setGameSettings}
       >
         <TimeLimitModal
           gameSettings={gameSettings}

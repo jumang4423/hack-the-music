@@ -1,0 +1,192 @@
+import { Button } from "@mui/material";
+import { Group } from "../gql/graphql";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import GenericModal from "../components/GenericModal";
+// @ts-ignore
+import { FilePicker } from "react-file-picker";
+import { useState } from "react";
+import InputSimpler from "../components/InputSimpler";
+import { RandomFiveLengthBinary, RandomId } from "../fun/randomId";
+import FireBaseStorage from "../fun/firebaseConfig";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import * as database from "firebase/database";
+// @ts-ignore
+import Cookies from "js-cookie";
+
+const SampleUploaderFormvalidation = (
+  url: string,
+  setSampleError: (bool: boolean) => void,
+  desc: string
+): boolean => {
+  if (url === "") {
+    alert("please import a sample");
+    return false;
+  }
+  if (desc === "") {
+    setSampleError(true);
+    return false;
+  }
+
+  setSampleError(false);
+
+  return true;
+};
+
+const InsertResultMusic = (args: {
+  groupId: string;
+  url: string;
+  desc: string;
+}) => {
+  const db = database.getDatabase();
+  const newSample = {
+    musicId: RandomId(),
+    url: args.url,
+    name: args.desc,
+    isUploadedBy: Cookies.get("userId"),
+    love: 0,
+    surprised: 0,
+    crazy: 0,
+    beautiful: 0,
+  };
+
+  const newSampleRef = database.ref(
+    db,
+    `groups/${args.groupId}/results/${newSample.musicId}`
+  );
+  database.set(newSampleRef, newSample);
+};
+
+const UploadMusic = async (
+  file: File,
+  onClose: () => void,
+  desc: string,
+  setIsUploading: (bool: boolean) => void,
+  groupId: string
+) => {
+  setIsUploading(true);
+  // upload to firebase storage
+  const storageRef = ref(
+    FireBaseStorage,
+    `results/${RandomFiveLengthBinary()}_${file.name}`
+  );
+  const snapshot = await uploadBytes(storageRef, file);
+  const url = await getDownloadURL(snapshot.ref);
+
+  // upload to the firebase database
+  InsertResultMusic({
+    groupId,
+    url,
+    desc,
+  });
+
+  setIsUploading(false);
+  onClose();
+};
+
+type Props = {
+  group: Group;
+  isModalOpen: boolean;
+  setIsModalOpen: (isModalOpen: boolean) => void;
+};
+
+const MusicUploadModal = ({ group, isModalOpen, setIsModalOpen }: Props) => {
+  const [file, setFile] = useState<File | null>(null);
+  const [fileName, setFileName] = useState<string>("");
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [fileNameError, setFileNameError] = useState<boolean>(false);
+  return (
+    <GenericModal
+      open={isModalOpen}
+      handleClose={() => setIsModalOpen(false)}
+      title={`upload your track`}
+    >
+      <div
+        style={{
+          margin: "0rem 2rem 0rem 2rem",
+        }}
+      >
+        <DialogContent dividers>
+          <div>upload your result track</div>
+          <div>accept only .mp3 file and max file size is 5MB</div>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              margin: "30px 0px 10px 0px",
+            }}
+          >
+            {!file && (
+              <FilePicker
+                extensions={["mp3", "wav"]}
+                maxSize={5}
+                onChange={(FileObject: File) => {
+                  setFile(FileObject);
+                }}
+                onError={(errMsg: string) => alert(errMsg)}
+              >
+                <Button variant="contained">import</Button>
+              </FilePicker>
+            )}
+
+            {file && (
+              <div
+                style={{
+                  color: "#4b4",
+                }}
+              >
+                imported
+              </div>
+            )}
+
+            <div
+              style={{
+                width: "60%",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <InputSimpler
+                title=""
+                placeholder="sample description"
+                error={fileNameError}
+                value={fileName}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setFileName(e.target.value);
+                }}
+              />
+            </div>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            disabled={isUploading}
+            onClick={() => {
+              SampleUploaderFormvalidation(
+                file ? "ok" : "",
+                setFileNameError,
+                fileName
+              ) &&
+                UploadMusic(
+                  file!,
+                  () => {
+                    setIsModalOpen(false);
+                    setFile(null);
+                    setFileName("");
+                  },
+                  fileName,
+                  setIsUploading,
+                  group.groupId
+                );
+            }}
+          >
+            {isUploading ? "uploading..." : "upload"}
+          </Button>
+        </DialogActions>
+      </div>
+    </GenericModal>
+  );
+};
+
+export default MusicUploadModal;

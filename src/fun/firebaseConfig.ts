@@ -4,6 +4,8 @@ import { getStorage } from "firebase/storage";
 const app = initializeApp({
   apiKey: "AIzaSyCF-yn31g2M-UU8wbYxquWVc8j8u4rDrss",
   authDomain: "msn-project-ef6c2.firebaseapp.com",
+  databaseURL:
+    "https://msn-project-ef6c2-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "msn-project-ef6c2",
   storageBucket: "msn-project-ef6c2.appspot.com",
   messagingSenderId: "607117372758",

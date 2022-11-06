@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Downloader from "../../../components/Downloader";
 import { ChaosGameSettingsType } from "../../../models/chaosGameType";
 import GenericModal from "../../../components/GenericModal";
 
@@ -6,9 +7,15 @@ type Props = {
   index: number;
   gameSettings: ChaosGameSettingsType;
   setGameSettings: (gameSettings: ChaosGameSettingsType) => void;
+  IsMeAdminRn: boolean;
 };
 
-const ImageInputBox = ({ index, gameSettings, setGameSettings }: Props) => {
+const ImageInputBox = ({
+  index,
+  gameSettings,
+  setGameSettings,
+  IsMeAdminRn,
+}: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const viewState = {
     descriptionPtr: gameSettings.randomImages.images[index].description,
@@ -23,28 +30,29 @@ const ImageInputBox = ({ index, gameSettings, setGameSettings }: Props) => {
         flexDirection: "row",
       }}
     >
-      <div
-        onClick={() => {
-          const newGameSettings = { ...gameSettings };
-          newGameSettings.randomImages.images.splice(index, 1);
-          setGameSettings(newGameSettings);
-        }}
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-          color: "red",
-          height: "100%",
-          width: "128px",
-          marginTop: "16px",
-          backgroundColor: "#f5f5f5",
-          marginRight: "16px",
-        }}
-      >
-        delete
-      </div>
-
+      {IsMeAdminRn && (
+        <div
+          onClick={() => {
+            const newGameSettings = { ...gameSettings };
+            newGameSettings.randomImages.images.splice(index, 1);
+            setGameSettings(newGameSettings);
+          }}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+            color: "red",
+            height: "100%",
+            width: "128px",
+            marginTop: "16px",
+            backgroundColor: "#f5f5f5",
+            marginRight: "16px",
+          }}
+        >
+          delete
+        </div>
+      )}
       <div
         style={{
           display: "flex",
@@ -84,6 +92,7 @@ const ImageInputBox = ({ index, gameSettings, setGameSettings }: Props) => {
             width: "32px",
             height: "32px",
             marginTop: "16px",
+            marginRight: "-16px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -96,10 +105,13 @@ const ImageInputBox = ({ index, gameSettings, setGameSettings }: Props) => {
         </div>
       </div>
 
+      <Downloader url={gameSettings.randomImages.images[index].url} />
+
       {viewState.descriptionPtr && (
         <div
           style={{
             marginTop: "24px",
+            textDecoration: "underline",
           }}
         >
           {viewState.descriptionPtr}
@@ -112,8 +124,6 @@ const ImageInputBox = ({ index, gameSettings, setGameSettings }: Props) => {
           setIsModalOpen(false);
         }}
         title="image viewer"
-        gameSettings={gameSettings}
-        setGameSettings={setGameSettings}
       >
         <div
           style={{

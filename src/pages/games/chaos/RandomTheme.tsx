@@ -13,13 +13,16 @@ import { GET_RANDOM_THEME } from "../../../fun/apis";
 import { useCookies } from "react-cookie";
 import GenericModal from "../../../components/GenericModal";
 import ThemeUploaderModal from "./ThemeUploaderModal";
+import { IsMeAdminRn } from "../../../fun/isMeAdminRn";
+import { Group } from "../../../gql/graphql";
 
 type Props = {
+  group: Group;
   gameSettings: ChaosGameSettingsType;
   setGameSettings: (gameSettings: ChaosGameSettingsType) => void;
 };
 
-const RandomTheme = ({ gameSettings, setGameSettings }: Props) => {
+const RandomTheme = ({ gameSettings, setGameSettings, group }: Props) => {
   const [GetTheme, { loading }] = useMutation(GET_RANDOM_THEME, {
     onCompleted({ randomTheme }) {
       RandomThemeDataHandle(randomTheme, gameSettings, setGameSettings);
@@ -27,16 +30,18 @@ const RandomTheme = ({ gameSettings, setGameSettings }: Props) => {
   });
   const [cookies, setCookie, removeCookie] = useCookies();
   const [open, setOpen] = useState(false);
-
   const handleClose = () => {
     setOpen(false);
+  };
+  const viewState = {
+    isMeAdminRn: IsMeAdminRn(group),
   };
 
   return (
     <div>
       <h3
         style={{
-          marginTop: "-10px",
+          marginTop: "-16px",
           marginBottom: "16px",
         }}
       >
@@ -60,6 +65,7 @@ const RandomTheme = ({ gameSettings, setGameSettings }: Props) => {
           />
         }
         label="enabled"
+        disabled={!viewState.isMeAdminRn}
       />
 
       {gameSettings.randomTheme.enabled && (
@@ -83,6 +89,7 @@ const RandomTheme = ({ gameSettings, setGameSettings }: Props) => {
               return (
                 <div key={index}>
                   <ThemeInputBox
+                    IsMeAdminRn={viewState.isMeAdminRn}
                     index={index}
                     gameSettings={gameSettings}
                     setGameSettings={setGameSettings}
@@ -103,7 +110,10 @@ const RandomTheme = ({ gameSettings, setGameSettings }: Props) => {
               style={{
                 margin: "0px 4px 4px 0px",
               }}
-              hidden={gameSettings.randomTheme.themes.length >= 5}
+              hidden={
+                gameSettings.randomTheme.themes.length >= 5 ||
+                !viewState.isMeAdminRn
+              }
             >
               <HackyButton
                 name={"＋"}
@@ -116,7 +126,10 @@ const RandomTheme = ({ gameSettings, setGameSettings }: Props) => {
               style={{
                 margin: "4px 8px 8px 8px",
               }}
-              hidden={gameSettings.randomTheme.themes.length >= 5}
+              hidden={
+                gameSettings.randomTheme.themes.length >= 5 ||
+                !viewState.isMeAdminRn
+              }
             >
               <HackyButton
                 prefer={true}
@@ -136,8 +149,6 @@ const RandomTheme = ({ gameSettings, setGameSettings }: Props) => {
             open={open}
             title={"🚢 upload theme"}
             handleClose={handleClose}
-            gameSettings={gameSettings}
-            setGameSettings={setGameSettings}
           >
             <div>
               <ThemeUploaderModal

@@ -6,16 +6,28 @@ export const GET_GROUP = gql`
       groupId
       name
       gameMode
+      adminUserId
     }
   }
 `;
 
 export const INSERT_GROUP = gql`
-  mutation InsertGroup($groupId: String!, $name: String!, $gameMode: Int!) {
-    insertGroup(groupId: $groupId, name: $name, gameMode: $gameMode) {
+  mutation InsertGroup(
+    $groupId: String!
+    $name: String!
+    $gameMode: Int!
+    $adminUserId: String!
+  ) {
+    insertGroup(
+      groupId: $groupId
+      name: $name
+      gameMode: $gameMode
+      adminUserId: $adminUserId
+    ) {
       groupId
       name
       gameMode
+      adminUserId
     }
   }
 `;

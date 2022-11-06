@@ -18,4 +18,7 @@ export type ChaosGameSettingsType = {
   };
   sceneIndex: number;
   timeLimitMin: number;
+  gameStarted: boolean;
+  gameEnded: boolean;
+  newGroupId: string;
 };

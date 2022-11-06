@@ -1,6 +1,6 @@
 const Devider = () => {
   return (
-    <hr
+    <div
       style={{
         width: "100%",
         borderTop: "1px dashed #999",

@@ -1,4 +1,3 @@
-import { ChaosGameSettingsType } from "../models/chaosGameType";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -18,16 +17,17 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 export interface DialogTitleProps {
   id: string;
   children?: React.ReactNode;
+  hideCloseButton: boolean;
   onClose: () => void;
 }
 
 function BootstrapDialogTitle(props: DialogTitleProps) {
-  const { children, onClose, ...other } = props;
+  const { children, onClose, hideCloseButton, ...other } = props;
 
   return (
     <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
       {children}
-      {onClose ? (
+      {hideCloseButton && onClose ? (
         <IconButton
           aria-label="close"
           onClick={onClose}
@@ -47,20 +47,18 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
 
 type Props = {
   open: boolean;
-  handleClose: () => void;
+  handleClose?: () => void;
+  hideCloseButton?: boolean;
   title: string;
   children: React.ReactNode;
-  gameSettings: ChaosGameSettingsType;
-  setGameSettings: (gameSettings: ChaosGameSettingsType) => void;
 };
 
 const GenericModal = ({
   open,
-  handleClose,
+  handleClose = () => {},
+  hideCloseButton = false,
   title,
   children,
-  gameSettings,
-  setGameSettings,
 }: Props) => {
   return (
     <div>
@@ -71,6 +69,7 @@ const GenericModal = ({
       >
         <BootstrapDialogTitle
           id="customized-dialog-title"
+          hideCloseButton={!hideCloseButton}
           onClose={handleClose}
         >
           {title}

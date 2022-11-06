@@ -10,16 +10,17 @@ type Props = {
   error?: boolean;
   fullWidth?: boolean;
   placeholder?: string;
+  onEnter?: any;
   type?: string;
 };
 
 const InputSimpler: React.FC<Props> = ({
   disabled = false,
-
   value,
   title,
   autoFocus = false,
   onChange = () => {},
+  onEnter = () => {},
   error = false,
   fullWidth = false,
   placeholder = "",
@@ -52,6 +53,11 @@ const InputSimpler: React.FC<Props> = ({
           placeholder={placeholder}
           onChange={onChange}
           type={type}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              onEnter();
+            }
+          }}
         />
       </Box>
     </div>
