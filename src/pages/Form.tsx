@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { Input } from "@mui/material";
 import { ColorObj } from "../models/color";
-import { useQuery } from "@apollo/client";
-import { GET_GROUP } from "../fun/apis";
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_GROUP, USER_VISIT_GROUP } from "../fun/apis";
 import HackyButton from "../components/HackyButton";
 import { Group } from "../gql/graphql";
 import { RemoveAllCookies } from "../fun/removeAllCookie";
 import { getAuth, signOut } from "firebase/auth";
+// @ts-ignore
+import Cookies from "js-cookie";
+import UserVisitedGroupListModal from "./UserVisitedGroupListModal";
 
 type Props = {
   setGroup: (group: Group) => void;
@@ -22,12 +25,21 @@ const Form = ({ setGroup, setModalOpen }: Props) => {
   });
 
   const { data, loading, refetch } = useQuery(GET_GROUP, {});
+  const [UserVisitedGroupListModalOpen, setUserVisitedGroupListModalOpen] =
+    useState(false);
+  const [UserVisitGroup] = useMutation(USER_VISIT_GROUP, {});
 
   useEffect(() => {
     if (data) {
       const group = data.group;
       setGroup(group);
       // navigate
+      UserVisitGroup({
+        variables: {
+          groupId: group.groupId,
+          userId: Cookies.get("userId") ?? "anonymous",
+        },
+      });
       setModalOpen(false);
     }
   }, [data]);
@@ -87,7 +99,8 @@ const Form = ({ setGroup, setModalOpen }: Props) => {
               marginLeft: "1rem",
               marginRight: "1rem",
             }}
-            name={loading ? "loading..." : "join"}
+            isPending={loading}
+            name={"join"}
             onClick={onJoingroup}
           />
         </div>
@@ -109,6 +122,18 @@ const Form = ({ setGroup, setModalOpen }: Props) => {
             marginTop: "-0.7rem",
           }}
           onClick={() => {
+            setUserVisitedGroupListModalOpen(true);
+          }}
+        >
+          {"->"} 🌏 visited group list
+        </p>
+        <p
+          style={{
+            cursor: "pointer",
+            color: ColorObj.gray,
+            marginTop: "-0.7rem",
+          }}
+          onClick={() => {
             RemoveAllCookies();
             signOut(getAuth()).then(() => {
               window.location.reload();
@@ -118,6 +143,11 @@ const Form = ({ setGroup, setModalOpen }: Props) => {
           {"->"} or logout right now
         </p>
       </div>
+      <UserVisitedGroupListModal
+        setGroup={setGroup}
+        modalOpen={UserVisitedGroupListModalOpen}
+        setModalOpen={setUserVisitedGroupListModalOpen}
+      />
     </div>
   );
 };

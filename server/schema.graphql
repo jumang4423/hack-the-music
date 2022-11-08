@@ -1,9 +1,17 @@
+
 type Group {
    groupId: String!
    name: String!
    gameMode: Int!
    adminUserId: String!
- }
+}
+
+type User {
+  userId: String!
+  name: String!
+  # TODO: pagination
+  accessedGroupIDs: [String!]!
+}
  
 type Theme {
    content: String!
@@ -26,15 +34,22 @@ type Image {
 
 type Query {
   group(groupId: String!): Group!
+  groups(groupIds: [String!]!): [Group!]!
+  user(userId: String!): User!
 }
 
 type Mutation {
+  # upload
   insertGroup(groupId: String!, name: String!, gameMode: Int!, adminUserId: String!): Group!
   uploadTheme(content: String!, description: String, idUploadedBy: String!): Theme!
   uploadSample(url: String!, description: String, idUploadedBy: String!): Sample!
   uploadImage(url: String!, description: String, idUploadedBy: String!): Image!
+  # generation
   randomTheme: Theme!
   randomSample: Sample!
   randomImage: Image!
   randomImages(count: Int!): [Image]!
+  # user
+  insertUser(userId: String!, name: String!): User!
+  userVisitGroup(userId: String!, groupId: String!): User!
 }

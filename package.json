@@ -12,6 +12,7 @@
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@graphql-tools/mock": "^8.7.6",
+    "@mui/icons-material": "^5.10.9",
     "@mui/joy": "^5.0.0-alpha.50",
     "@mui/material": "^5.10.10",
     "axios": "^1.1.3",

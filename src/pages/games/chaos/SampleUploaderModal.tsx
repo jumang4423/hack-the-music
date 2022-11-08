@@ -2,6 +2,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { useState } from "react";
 import { ChaosGameSettingsType } from "../../../models/chaosGameType";
+// @ts-ignore
 import { FilePicker } from "react-file-picker";
 import { Button } from "@mui/material";
 import InputSimpler from "../../../components/InputSimpler";

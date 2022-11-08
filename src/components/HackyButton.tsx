@@ -24,7 +24,6 @@ const HackyButton = ({
   const textColor = () => {
     if (isDisabled) return ColorObj.gray;
     if (isError) return ColorObj.red;
-
     if (prefer) return "green";
 
     return mode === "dark" ? ColorObj.white : ColorObj.black;
@@ -35,7 +34,7 @@ const HackyButton = ({
         backgroundColor: ColorObj.lightGray,
         color: textColor(),
         cursor: isDisabled ? "not-allowed" : "pointer",
-        pointerEvents: isDisabled ? "none" : "auto",
+        pointerEvents: isDisabled || isPending ? "none" : "auto",
         ...style,
       }}
       onClick={onClick}

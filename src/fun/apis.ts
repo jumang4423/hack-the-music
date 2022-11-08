@@ -11,6 +11,16 @@ export const GET_GROUP = gql`
   }
 `;
 
+export const GET_USER = gql`
+  query GetUser($userId: String!) {
+    user(userId: $userId) {
+      userId
+      name
+      accessedGroupIDs
+    }
+  }
+`;
+
 export const INSERT_GROUP = gql`
   mutation InsertGroup(
     $groupId: String!
@@ -112,6 +122,45 @@ export const INSERT_IMAGE = gql`
       url
       description
       idUploadedBy
+    }
+  }
+`;
+
+export const INSERT_USER = gql`
+  mutation InsertUser($userId: String!, $name: String!) {
+    insertUser(userId: $userId, name: $name) {
+      userId
+      name
+      accessedGroupIDs
+    }
+  }
+`;
+
+export const USER_VISIT_GROUP = gql`
+  mutation UserVisitGroup($userId: String!, $groupId: String!) {
+    userVisitGroup(userId: $userId, groupId: $groupId) {
+      userId
+      name
+      accessedGroupIDs
+    }
+  }
+`;
+
+export const GET_USER_ACCESSED_GROUPS = gql`
+  query GetUserAccessedGroups($userId: String!) {
+    user(userId: $userId) {
+      accessedGroupIDs
+    }
+  }
+`;
+
+export const GET_GROUPS = gql`
+  query GetGroups($groupIDs: [String!]!) {
+    groups(groupIds: $groupIDs) {
+      groupId
+      name
+      gameMode
+      adminUserId
     }
   }
 `;

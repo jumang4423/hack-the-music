@@ -1,0 +1,25 @@
+import { User } from "../generated/graphql";
+import { FireStoreApp } from "./firebase.drivers";
+import ErrStr from "../domain/ErrStr.domain";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { ErrsEnumeration } from "../util/err.util";
+
+export const InsertUserDriver = async (
+  user: User
+): Promise<[User | null, ErrStr]> => {
+  const db = FireStoreApp;
+
+  try {
+    const docRef = doc(db, "users", user.userId);
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) {
+      await setDoc(docRef, user);
+
+      return [user, new ErrStr({})];
+    } else {
+      throw new Error(ErrsEnumeration.USER_ALREADY_EXISTS);
+    }
+  } catch (err: unknown) {
+    return [null, new ErrStr({ isErr: true, errStr: (err as Error).message })];
+  }
+};

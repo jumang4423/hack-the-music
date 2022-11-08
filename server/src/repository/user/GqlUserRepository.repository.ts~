@@ -1,0 +1,22 @@
+import ErrStr from "../../domain/ErrStr.domain";
+import { User } from "../../generated/graphql";
+import { UserRepository } from "../../usecase/user/interface/repository.usecase";
+import { InsertUserDriver } from "../../drivers/insertUser.drivers";
+import { GetUserDriver } from "../../drivers/getUser.drivers";
+
+export class GqlUserRepository implements UserRepository {
+  public async insertUser(
+    userId: string,
+    name: string
+  ): Promise<[User | null, ErrStr]> {
+    const newUser: User = { userId, name, accessedGroupIDs: [] };
+    const [_, err] = await InsertUserDriver(newUser);
+    if (err.IsError()) {
+      return [null, err];
+    }
+    return [newUser, new ErrStr({})];
+  }
+  public async getUser(userId: string): Promise<[User | null, ErrStr]> {
+    return await GetUserDriver(userId);
+  }
+}

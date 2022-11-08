@@ -2,8 +2,6 @@ import { Drawer, Tooltip } from "@mui/material";
 import { Group } from "../gql/graphql";
 import { GameModeEnum } from "../models/gameMode";
 import ChaosModeGame from "./games/chaos/ChaosModeGame";
-import { useMutation } from "@apollo/client";
-import { INSERT_GROUP } from "../fun/apis";
 import { ChaosGameSettingsType } from "../models/chaosGameType";
 import { useEffect, useState } from "react";
 import TimeLimitBox from "./games/TimeLimitBox";
@@ -27,16 +25,43 @@ import {
 import { IsMeAdminRn } from "../fun/isMeAdminRn";
 import { RandomId } from "../fun/randomId";
 import MusicUploadModal from "./MusicUploadModal";
+// @ts-ignore
+import Cookies from "js-cookie";
 
 const refresh = () => {
   window.location.reload();
 };
 
-export const rage = () => {
-  RemoveAllCookies();
-  signOut(getAuth()).then(() => {
-    refresh();
-  });
+const CheckIfICanRageToday = async (groupId: string): Promise<boolean> => {
+  const db = getDatabase();
+  const rageRef = ref(
+    db,
+    `groups/${groupId}/ragedFlags/${Cookies.get("userId")}`
+  );
+  const snapshot = await get(rageRef);
+
+  return !snapshot.val();
+};
+
+const OiMeRagedFlagTaker = (groupId: string): void => {
+  const db = getDatabase();
+  const rageRef = ref(
+    db,
+    `groups/${groupId}/ragedFlags/${Cookies.get("userId")}`
+  );
+  set(rageRef, true);
+};
+
+export const rage = async (groupId: string) => {
+  const isRage = await CheckIfICanRageToday(groupId);
+  if (isRage) {
+    OiMeRagedFlagTaker(groupId);
+    RemoveAllCookies();
+    // flager
+    signOut(getAuth()).then(() => {
+      refresh();
+    });
+  }
 };
 
 const secToMinSecString = (sec: number) => {
@@ -49,7 +74,7 @@ export const ToRageQuit = (groupId: string) => {
   const db = getDatabase();
   const isRageQuitRef = ref(db, `groups/${groupId}/isRageQuit`);
   set(isRageQuitRef, true);
-  rage();
+  rage(groupId);
 };
 
 const UpdateTimeLimit = (groupId: string, timeLimit: number) => {
@@ -99,7 +124,6 @@ const GameModal: React.FC<Props> = ({
   setGroup,
   isNewUser,
 }) => {
-  const [insertGroup] = useMutation(INSERT_GROUP);
   const [gameSettings, setGameSettings] = useState<ChaosGameSettingsType>({
     randomTheme: {
       enabled: true,
@@ -174,13 +198,13 @@ const GameModal: React.FC<Props> = ({
     get(isRageQuitRef).then((snapshot) => {
       const isRageQuit = snapshot.val();
       if (isRageQuit) {
-        rage();
+        rage(group.groupId);
       }
     });
     onValue(isRageQuitRef, (snapshot) => {
       const isRageQuit = snapshot.val();
       if (isRageQuit) {
-        rage();
+        rage(group.groupId);
       }
     });
     const TimeLimitRef = ref(db, `groups/${groupId}/timeLimit`);
@@ -270,15 +294,6 @@ const GameModal: React.FC<Props> = ({
       newGameSettings.newGroupId = newRandomId;
       setGameSettings(newGameSettings);
       // おわり
-      // create new Group
-      insertGroup({
-        variables: {
-          groupId: newRandomId,
-          name: `${group.name} (copy)`,
-          adminUserId: group.adminUserId,
-          gameMode: group.gameMode,
-        },
-      });
     }
   }, [currentTime]);
 
@@ -380,17 +395,6 @@ const GameModal: React.FC<Props> = ({
                         right: 0,
                       }}
                     >
-                      <HackyButton
-                        name={"back"}
-                        mode={"light"}
-                        style={{
-                          marginRight: "1rem",
-                        }}
-                        onClick={() => {
-                          refresh();
-                        }}
-                      />
-
                       <HackyButton
                         name={"🎧 start"}
                         mode={"light"}

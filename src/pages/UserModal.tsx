@@ -1,0 +1,100 @@
+import { useCookies } from "react-cookie";
+import { useEffect } from "react";
+import GenericModal from "../components/GenericModal";
+import HackyButton from "../components/HackyButton";
+import InputSimpler from "../components/InputSimpler";
+import { useState } from "react";
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_USER, INSERT_USER } from "../fun/apis";
+
+type Props = {
+  modalOpen: boolean;
+  setModalOpen: (is: boolean) => void;
+};
+
+const UserModal = ({ modalOpen, setModalOpen }: Props) => {
+  const [cookies, setCoookie] = useCookies();
+  const [isNameError, setIsNameError] = useState(false);
+  const { data, error, refetch } = useQuery(GET_USER, {});
+  const [insertUser, { data: data2, error: error2, loading }] =
+    useMutation(INSERT_USER);
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    // if user exists
+    if (error && cookies.userId) {
+      setModalOpen(true);
+    }
+    if (data) {
+      setCoookie("name", data.user.name);
+      setModalOpen(false);
+    }
+  }, [error, data]);
+
+  useEffect(() => {
+    if (error2) {
+      alert("user creation failed");
+    }
+    if (data2) {
+      setCoookie("name", data2.insertUser.name);
+      // refetch
+      refetch({ userId: cookies.userId });
+    }
+  }, [error2, data2]);
+
+  useEffect(() => {
+    refetch({ userId: cookies.userId });
+  }, [cookies.userId]);
+
+  const inputValidation = () => {
+    if (userName.length < 3 || userName.length > 20) {
+      setIsNameError(true);
+      return false;
+    }
+    return true;
+  };
+
+  return (
+    <div>
+      <GenericModal
+        open={modalOpen}
+        hideCloseButton={true}
+        handleClose={() => {}}
+        title="👨‍👨‍👦‍👦 user settings"
+      >
+        <div
+          style={{
+            width: "100%",
+            padding: "0 16px 16px 16px",
+          }}
+        >
+          <div>what is your name?</div>
+
+          <InputSimpler
+            title="name"
+            placeholder="name"
+            value={userName}
+            onChange={(e: any) => setUserName(e.target.value)}
+            error={isNameError}
+            helperText="name must be between 3 and 20 characters"
+          />
+
+          <HackyButton
+            style={{ width: "calc(100% - 32px)" }}
+            name="set name"
+            isPending={loading}
+            prefer={true}
+            onClick={() => {
+              inputValidation() &&
+                insertUser({
+                  variables: { userId: cookies.userId, name: userName },
+                });
+            }}
+          />
+        </div>
+      </GenericModal>
+    </div>
+  );
+};
+
+export default UserModal;

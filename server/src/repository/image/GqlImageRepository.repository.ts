@@ -67,7 +67,7 @@ export class GqlImageRepository implements ImageRepository {
     }
     const [_, err2] = await InsertImageDriver(image, imageGlobalLenCached);
     if (err2.IsError()) {
-      return [null, err];
+      return [null, err2];
     }
     return [image, new ErrStr({ isErr: false })];
   }

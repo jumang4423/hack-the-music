@@ -1,0 +1,29 @@
+import { Group } from "../generated/graphql";
+import { FireStoreApp } from "./firebase.drivers";
+import ErrStr from "../domain/ErrStr.domain";
+import {
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  collection,
+  QuerySnapshot,
+} from "firebase/firestore";
+import { ErrsEnumeration } from "../util/err.util";
+
+export const GetGroupsDriver = async (
+  groupIds: string[]
+): Promise<[Array<Group>, ErrStr]> => {
+  const db = FireStoreApp;
+
+  try {
+    const docRef = collection(db, "groups");
+    const q = query(docRef, where("__name__", "in", groupIds));
+    const querySnapshot = await getDocs(q);
+    const groups = querySnapshot.docs.map((doc) => doc.data() as Group);
+    return [groups, ErrsEnumeration.Success];
+  } catch (err: unknown) {
+    return [null, new ErrStr({ isErr: true, errStr: (err as Error).message })];
+  }
+};

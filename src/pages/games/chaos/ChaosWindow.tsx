@@ -59,7 +59,7 @@ const ChaosWindow = ({
           flexGrow: 1,
           bgcolor: "background.white",
           display: "flex",
-          height: "50vh",
+          height: "75vh",
           borderRadius: 10,
         }}
       >
@@ -90,6 +90,10 @@ const ChaosWindow = ({
             label={`${viewState.meSelected(3) ? "✔︎ " : ""}⚠️ generative`}
             {...a11yProps(3)}
           />
+          <Tab
+            label={`${viewState.meSelected(4) ? "✔︎ " : ""}⚠️ videos`}
+            {...a11yProps(4)}
+          />
         </Tabs>
         <TabPanel value={themeViewing} index={0}>
           <RandomTheme
@@ -113,7 +117,16 @@ const ChaosWindow = ({
           />
         </TabPanel>
         <TabPanel value={themeViewing} index={3}>
-          not implemented
+          <div>⚠️ generative mode (developing)</div>
+          <div> generate sound via programming</div>
+          <div> we can collaborate on making weird sounds and sequences</div>
+          <div> and we can record them so we can use them in the game</div>
+        </TabPanel>
+        <TabPanel value={themeViewing} index={4}>
+          <div>⚠️ video mode (developing)</div>
+          <div> choose random videos from server</div>
+          <div> we create a bgm for the video</div>
+          <div>meta datas like midi or bpm will be automatically generated</div>
         </TabPanel>
       </Box>
     </div>

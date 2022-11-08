@@ -38,6 +38,7 @@ export type Image = {
 export type Mutation = {
   __typename?: 'Mutation';
   insertGroup: Group;
+  insertUser: User;
   randomImage: Image;
   randomImages: Array<Maybe<Image>>;
   randomSample: Sample;
@@ -45,6 +46,7 @@ export type Mutation = {
   uploadImage: Image;
   uploadSample: Sample;
   uploadTheme: Theme;
+  userVisitGroup: User;
 };
 
 
@@ -53,6 +55,12 @@ export type MutationInsertGroupArgs = {
   gameMode: Scalars['Int'];
   groupId: Scalars['String'];
   name: Scalars['String'];
+};
+
+
+export type MutationInsertUserArgs = {
+  name: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 
@@ -81,14 +89,32 @@ export type MutationUploadThemeArgs = {
   idUploadedBy: Scalars['String'];
 };
 
+
+export type MutationUserVisitGroupArgs = {
+  groupId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   group: Group;
+  groups: Array<Group>;
+  user: User;
 };
 
 
 export type QueryGroupArgs = {
   groupId: Scalars['String'];
+};
+
+
+export type QueryGroupsArgs = {
+  groupIds: Array<Scalars['String']>;
+};
+
+
+export type QueryUserArgs = {
+  userId: Scalars['String'];
 };
 
 export type Sample = {
@@ -103,4 +129,11 @@ export type Theme = {
   content: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   idUploadedBy: Scalars['String'];
+};
+
+export type User = {
+  __typename?: 'User';
+  accessedGroupIDs: Array<Scalars['String']>;
+  name: Scalars['String'];
+  userId: Scalars['String'];
 };

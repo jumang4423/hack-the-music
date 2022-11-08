@@ -85,9 +85,9 @@ const RandomTheme = ({ gameSettings, setGameSettings, group }: Props) => {
               marginBottom: "20px",
             }}
           >
-            {gameSettings.randomTheme.themes.map((_, index: number) => {
+            {gameSettings.randomTheme.themes.map((theme, index: number) => {
               return (
-                <div key={index}>
+                <div key={theme.content + index}>
                   <ThemeInputBox
                     IsMeAdminRn={viewState.isMeAdminRn}
                     index={index}
@@ -134,6 +134,7 @@ const RandomTheme = ({ gameSettings, setGameSettings, group }: Props) => {
               <HackyButton
                 prefer={true}
                 name={loading ? "loading..." : "🌏 random theme"}
+                isDisabled={loading}
                 onClick={() => {
                   GetTheme({
                     variables: {

@@ -36,10 +36,15 @@ const RandomSample = ({ group, gameSettings, setGameSettings }: Props) => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        overflowY: "scroll",
+        height: "70vh",
+        marginTop: "-32px",
+      }}
+    >
       <h3
         style={{
-          marginTop: "-16px",
           marginBottom: "16px",
         }}
       >
@@ -76,9 +81,9 @@ const RandomSample = ({ group, gameSettings, setGameSettings }: Props) => {
             marginBottom: "20px",
           }}
         >
-          {gameSettings.randomSamples.samples.map((_, index: number) => {
+          {gameSettings.randomSamples.samples.map((sample, index: number) => {
             return (
-              <div key={index}>
+              <div key={sample.url + index}>
                 <SampleInputBox
                   IsMeAdminRn={viewState.isMeAdminRn}
                   index={index}
@@ -102,7 +107,7 @@ const RandomSample = ({ group, gameSettings, setGameSettings }: Props) => {
               margin: "0px 4px 4px 0px",
             }}
             hidden={
-              gameSettings.randomSamples.samples.length >= 5 ||
+              gameSettings.randomSamples.samples.length >= 15 ||
               !viewState.isMeAdminRn
             }
           >
@@ -118,12 +123,13 @@ const RandomSample = ({ group, gameSettings, setGameSettings }: Props) => {
               margin: "4px 8px 8px 8px",
             }}
             hidden={
-              gameSettings.randomSamples.samples.length >= 5 ||
+              gameSettings.randomSamples.samples.length >= 15 ||
               !viewState.isMeAdminRn
             }
           >
             <HackyButton
               prefer={true}
+              isDisabled={loading}
               name={loading ? "loading..." : "🌏 random sample"}
               onClick={() => {
                 GetSample();

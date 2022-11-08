@@ -6,10 +6,12 @@ import { RandomId } from "../fun/randomId";
 import InputSimpler from "../components/InputSimpler";
 import { GameModeEnum } from "../models/gameMode";
 import { useMutation } from "@apollo/client";
-import { INSERT_GROUP } from "../fun/apis";
+import { INSERT_GROUP, USER_VISIT_GROUP } from "../fun/apis";
 import HackyButton from "../components/HackyButton";
 import { Group } from "../gql/graphql";
 import { useCookies } from "react-cookie";
+// @ts-ignore
+import Cookies from "js-cookie";
 
 type Props = {
   modalOpen: boolean;
@@ -36,8 +38,9 @@ const NewSessionModal: React.FC<Props> = ({
     nameBoxError: false,
     gameMode: GameModeEnum.chaos,
   });
+  const [UserVisitGroup] = useMutation(USER_VISIT_GROUP, {});
   const [insertGroup, { data, loading, error }] = useMutation(INSERT_GROUP);
-  const [cookies, setCookie, removeCookie] = useCookies();
+  const [cookies] = useCookies();
 
   useEffect(() => {
     modalOpen && setFormData({ ...formData, groupIdBox: RandomId() });
@@ -48,6 +51,12 @@ const NewSessionModal: React.FC<Props> = ({
       setGroup(data.insertGroup);
       console.log(data.insertGroup);
       setIsNewUser(true);
+      UserVisitGroup({
+        variables: {
+          groupId: data.insertGroup.groupId,
+          userId: cookies.userId ?? "anonymous",
+        },
+      });
 
       // navigate
       setModalOpen(false);
@@ -145,8 +154,12 @@ const NewSessionModal: React.FC<Props> = ({
                 aria-label="Platform"
               >
                 <ToggleButton value={0}>chaos mode</ToggleButton>
-                <ToggleButton value={1}>ogiri mode</ToggleButton>
-                <ToggleButton value={2}>bgm mode</ToggleButton>
+                <ToggleButton value={1} disabled>
+                  ⚠️ ogiri mode
+                </ToggleButton>
+                <ToggleButton value={2} disabled>
+                  ⚠️ video mode
+                </ToggleButton>
               </ToggleButtonGroup>
             </div>
 
@@ -166,6 +179,7 @@ const NewSessionModal: React.FC<Props> = ({
                 prefer
                 name={loading ? "loading..." : "create"}
                 onClick={onCreateSession}
+                isDisabled={loading}
               />
             </div>
             <div

@@ -6,6 +6,7 @@ import { GameModeEnum } from "../models/gameMode";
 import Form from "./Form";
 import { Group } from "../gql/graphql";
 import AuthModal from "./AuthModal";
+import UserModal from "./UserModal";
 
 export const GroupDefault: Group = {
   groupId: "",
@@ -20,6 +21,7 @@ function App() {
   const [gameModalOpen, setGameModalOpen] = useState(false);
   const [group, setGroup] = useState<Group>(GroupDefault);
   const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
+  const [userModalOpen, setUserModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (group.groupId !== "") {
@@ -48,6 +50,7 @@ function App() {
       />
 
       <AuthModal modalOpen={authModalOpen} setModalOpen={setAuthModalOpen} />
+      <UserModal modalOpen={userModalOpen} setModalOpen={setUserModalOpen} />
     </div>
   );
 }

@@ -70,7 +70,7 @@ const ThemeInputBox = ({
           }}
         >
           * {gameSettings.randomTheme.themes[index].description}
-          {gameSettings.randomTheme.themes[index].description < 1 &&
+          {!gameSettings.randomTheme.themes[index].description &&
             "no description"}
         </div>
       </div>

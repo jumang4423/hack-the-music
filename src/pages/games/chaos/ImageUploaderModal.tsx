@@ -2,10 +2,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { useState } from "react";
 import { ChaosGameSettingsType } from "../../../models/chaosGameType";
+// @ts-ignore
 import { FilePicker } from "react-file-picker";
 import { Button } from "@mui/material";
 import InputSimpler from "../../../components/InputSimpler";
-import { FileNameFromPath } from "../../../fun/fileNameFromPath";
 import { useCookies } from "react-cookie";
 import { useMutation } from "@apollo/client";
 import { INSERT_IMAGE } from "../../../fun/apis";

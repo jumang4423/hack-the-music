@@ -1,4 +1,4 @@
-import { Theme, Sample, Image } from "../generated/graphql";
+import { Theme, Sample, Image, User } from "../generated/graphql";
 import { Group, MutationResolvers } from "../generated/graphql";
 import { GqlGroupRepository } from "../repository/group/GqlGroupRepository.repository";
 import { GroupInteractor } from "../usecase/group/GroupInteractor.usecase";
@@ -8,6 +8,8 @@ import { GqlSampleRepository } from "../repository/sample/GqlSampleRepository.re
 import { SampleInteractor } from "../usecase/sample/SampleInteractor.usecase";
 import { GqlThemeRepository } from "../repository/theme/GqlThemeRepository.repository";
 import { ThemeInteractor } from "../usecase/theme/ThemeInteractor.usecase";
+import { GqlUserRepository } from "../repository/user/GqlUserRepository.repository";
+import { UserInteractor } from "../usecase/user/UserInteractor.usecase";
 
 export const mutationResolvers: MutationResolvers = {
   insertGroup: async (
@@ -69,5 +71,17 @@ export const mutationResolvers: MutationResolvers = {
     const usecase = new ImageInteractor(repository);
     await usecase.handleGetRandomImages({ count });
     return usecase.getResponseGetRandomImages();
+  },
+  insertUser: async (_, { userId, name }): Promise<User> => {
+    const repository = new GqlUserRepository();
+    const usecase = new UserInteractor(repository);
+    await usecase.handleInsertUser({ userId, name });
+    return usecase.getResponseInsertUser();
+  },
+  userVisitGroup: async (_, { userId, groupId }): Promise<User> => {
+    const repository = new GqlUserRepository();
+    const usecase = new UserInteractor(repository);
+    await usecase.handleUserVisitGroup({ userId, groupId });
+    return usecase.getResponseUserVisitGroup();
   },
 };

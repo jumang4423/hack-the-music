@@ -78,9 +78,9 @@ const RandomImage = ({ group, gameSettings, setGameSettings }: Props) => {
             marginBottom: "20px",
           }}
         >
-          {gameSettings.randomImages.images.map((_, index: number) => {
+          {gameSettings.randomImages.images.map((image, index) => {
             return (
-              <div key={index}>
+              <div key={image.url + index}>
                 <ImageInputBox
                   IsMeAdminRn={viewState.isMeAdminRn}
                   index={index}
@@ -126,6 +126,7 @@ const RandomImage = ({ group, gameSettings, setGameSettings }: Props) => {
           >
             <HackyButton
               prefer={true}
+              isDisabled={loading}
               name={loading ? "loading..." : "🌏 random image"}
               onClick={() => {
                 GetImage();

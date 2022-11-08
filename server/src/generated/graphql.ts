@@ -30,6 +30,7 @@ export type Image = {
 export type Mutation = {
   __typename?: 'Mutation';
   insertGroup: Group;
+  insertUser: User;
   randomImage: Image;
   randomImages: Array<Maybe<Image>>;
   randomSample: Sample;
@@ -37,6 +38,7 @@ export type Mutation = {
   uploadImage: Image;
   uploadSample: Sample;
   uploadTheme: Theme;
+  userVisitGroup: User;
 };
 
 
@@ -45,6 +47,12 @@ export type MutationInsertGroupArgs = {
   gameMode: Scalars['Int'];
   groupId: Scalars['String'];
   name: Scalars['String'];
+};
+
+
+export type MutationInsertUserArgs = {
+  name: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 
@@ -73,14 +81,32 @@ export type MutationUploadThemeArgs = {
   idUploadedBy: Scalars['String'];
 };
 
+
+export type MutationUserVisitGroupArgs = {
+  groupId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   group: Group;
+  groups: Array<Group>;
+  user: User;
 };
 
 
 export type QueryGroupArgs = {
   groupId: Scalars['String'];
+};
+
+
+export type QueryGroupsArgs = {
+  groupIds: Array<Scalars['String']>;
+};
+
+
+export type QueryUserArgs = {
+  userId: Scalars['String'];
 };
 
 export type Sample = {
@@ -95,6 +121,13 @@ export type Theme = {
   content: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   idUploadedBy: Scalars['String'];
+};
+
+export type User = {
+  __typename?: 'User';
+  accessedGroupIDs: Array<Scalars['String']>;
+  name: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -185,6 +218,7 @@ export type ResolversTypes = ResolversObject<{
   Sample: ResolverTypeWrapper<Sample>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Theme: ResolverTypeWrapper<Theme>;
+  User: ResolverTypeWrapper<User>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -198,6 +232,7 @@ export type ResolversParentTypes = ResolversObject<{
   Sample: Sample;
   String: Scalars['String'];
   Theme: Theme;
+  User: User;
 }>;
 
 export type GroupResolvers<ContextType = any, ParentType extends ResolversParentTypes['Group'] = ResolversParentTypes['Group']> = ResolversObject<{
@@ -217,6 +252,7 @@ export type ImageResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   insertGroup?: Resolver<ResolversTypes['Group'], ParentType, ContextType, RequireFields<MutationInsertGroupArgs, 'adminUserId' | 'gameMode' | 'groupId' | 'name'>>;
+  insertUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationInsertUserArgs, 'name' | 'userId'>>;
   randomImage?: Resolver<ResolversTypes['Image'], ParentType, ContextType>;
   randomImages?: Resolver<Array<Maybe<ResolversTypes['Image']>>, ParentType, ContextType, RequireFields<MutationRandomImagesArgs, 'count'>>;
   randomSample?: Resolver<ResolversTypes['Sample'], ParentType, ContextType>;
@@ -224,10 +260,13 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   uploadImage?: Resolver<ResolversTypes['Image'], ParentType, ContextType, RequireFields<MutationUploadImageArgs, 'idUploadedBy' | 'url'>>;
   uploadSample?: Resolver<ResolversTypes['Sample'], ParentType, ContextType, RequireFields<MutationUploadSampleArgs, 'idUploadedBy' | 'url'>>;
   uploadTheme?: Resolver<ResolversTypes['Theme'], ParentType, ContextType, RequireFields<MutationUploadThemeArgs, 'content' | 'idUploadedBy'>>;
+  userVisitGroup?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUserVisitGroupArgs, 'groupId' | 'userId'>>;
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   group?: Resolver<ResolversTypes['Group'], ParentType, ContextType, RequireFields<QueryGroupArgs, 'groupId'>>;
+  groups?: Resolver<Array<ResolversTypes['Group']>, ParentType, ContextType, RequireFields<QueryGroupsArgs, 'groupIds'>>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'userId'>>;
 }>;
 
 export type SampleResolvers<ContextType = any, ParentType extends ResolversParentTypes['Sample'] = ResolversParentTypes['Sample']> = ResolversObject<{
@@ -244,6 +283,13 @@ export type ThemeResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 }>;
 
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
+  accessedGroupIDs?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+}>;
+
 export type Resolvers<ContextType = any> = ResolversObject<{
   Group?: GroupResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
@@ -251,6 +297,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Query?: QueryResolvers<ContextType>;
   Sample?: SampleResolvers<ContextType>;
   Theme?: ThemeResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
 }>;
 
 

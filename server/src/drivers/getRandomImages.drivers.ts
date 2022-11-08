@@ -2,7 +2,6 @@ import ErrStr from "../domain/ErrStr.domain";
 import { Image } from "../generated/graphql";
 import { FireStoreApp } from "./firebase.drivers";
 import {
-  doc,
   getDocs,
   query,
   where,

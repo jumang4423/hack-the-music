@@ -25,6 +25,7 @@ type Message = {
   type: MsgType;
   userId: string;
   text: string;
+  userName: string;
 };
 
 const MessageArr = ({
@@ -94,7 +95,7 @@ const MessageArr = ({
                   }}
                   key={message.id}
                 >
-                  {message.text}
+                  {message.userName}: {message.text}
                 </div>
               </div>
             </div>
@@ -149,13 +150,8 @@ const sendMsg = (mtype: MsgType, text: string, groupId: string) => {
     type: mtype,
     userId: Cookies.get("userId"),
     text: text,
+    userName: Cookies.get("name") ?? "anonymous",
   });
-};
-
-const sendMsgByObj = (msg: Message, groupId: string) => {
-  const db = getDatabase();
-  const newMsgRef = push(ref(db, `groups/${groupId}/messages`));
-  set(newMsgRef, msg);
 };
 
 const Messanger = ({ group, setGroup, modalOpen }: Props) => {
@@ -168,12 +164,14 @@ const Messanger = ({ group, setGroup, modalOpen }: Props) => {
       text: "welcome to hack-the-music!",
       type: MsgType.Text,
       userId,
+      userName: "bot",
     },
     {
       id: "jumango2",
       text: "type 'help' to see what you can do",
       type: MsgType.Text,
       userId,
+      userName: "bot",
     },
   ]);
 

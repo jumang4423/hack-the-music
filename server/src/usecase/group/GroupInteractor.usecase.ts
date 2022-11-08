@@ -52,6 +52,31 @@ export class GroupInteractor {
     this.err = err;
   };
 
+  handleFindGroupsByIds = async (args: { groupIds: string[] }) => {
+    const { groupIds } = args;
+    // validate
+    if (groupIds === undefined) {
+      this.err.ToError(ErrsEnumeration.ARGS_NOT_VALID);
+      return void 0;
+    }
+    if (groupIds.length === 0) {
+      return [[], new ErrStr({})];
+    }
+    const pagedGroupIds =
+      groupIds.length > 10
+        ? groupIds.slice(groupIds.length - 10, groupIds.length)
+        : groupIds;
+
+    console.log(pagedGroupIds);
+
+    const [groups, err] = await this.groupRepository.findGroupsByIds(
+      pagedGroupIds
+    );
+    console.log(groups.map((group) => group.groupId));
+    this.response = groups;
+    this.err = err;
+  };
+
   getResponseInsertGroup = (): Group => {
     if (this.err.IsError()) {
       throw new Error(this.err.GetError());
@@ -60,6 +85,13 @@ export class GroupInteractor {
   };
 
   getResponseFindGroupById = (): Group => {
+    if (this.err.IsError()) {
+      throw new Error(this.err.GetError());
+    }
+    return this.response!;
+  };
+
+  getResponseFindGroupsByIds = (): Array<Group> => {
     if (this.err.IsError()) {
       throw new Error(this.err.GetError());
     }

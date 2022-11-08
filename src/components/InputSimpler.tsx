@@ -1,5 +1,6 @@
 import { Input } from "@mui/material";
 import { Box } from "@mui/system";
+import { FormHelperText } from "@mui/material";
 
 type Props = {
   disabled?: boolean;
@@ -11,6 +12,7 @@ type Props = {
   fullWidth?: boolean;
   placeholder?: string;
   onEnter?: any;
+  helperText?: string;
   type?: string;
 };
 
@@ -23,6 +25,7 @@ const InputSimpler: React.FC<Props> = ({
   onEnter = () => {},
   error = false,
   fullWidth = false,
+  helperText = "",
   placeholder = "",
   type = "text",
 }) => {
@@ -59,6 +62,7 @@ const InputSimpler: React.FC<Props> = ({
             }
           }}
         />
+        {error && <FormHelperText error>{helperText}</FormHelperText>}
       </Box>
     </div>
   );

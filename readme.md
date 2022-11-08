@@ -18,3 +18,14 @@ front:
 yarn dev
 ```
 
+## deploy
+
+server:
+go to render
+https://dashboard.render.com/web/srv-cdjga8kgqg433fe3m9dg
+
+front:
+```bash
+vercel
+```
+https://hack-the-music-jumang4423.vercel.app/
