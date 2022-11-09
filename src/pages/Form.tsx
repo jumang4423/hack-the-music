@@ -5,11 +5,10 @@ import { useQuery, useMutation } from "@apollo/client";
 import { GET_GROUP, USER_VISIT_GROUP } from "../fun/apis";
 import HackyButton from "../components/HackyButton";
 import { Group } from "../gql/graphql";
-import { RemoveAllCookies } from "../fun/removeAllCookie";
-import { getAuth, signOut } from "firebase/auth";
 // @ts-ignore
 import Cookies from "js-cookie";
 import UserVisitedGroupListModal from "./UserVisitedGroupListModal";
+import LogoutModal from "./LogoutModal";
 
 type Props = {
   setGroup: (group: Group) => void;
@@ -28,6 +27,7 @@ const Form = ({ setGroup, setModalOpen }: Props) => {
   const [UserVisitedGroupListModalOpen, setUserVisitedGroupListModalOpen] =
     useState(false);
   const [UserVisitGroup] = useMutation(USER_VISIT_GROUP, {});
+  const [isLogoutModal, setIsLogoutModal] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -135,10 +135,7 @@ const Form = ({ setGroup, setModalOpen }: Props) => {
             marginTop: "-0.7rem",
           }}
           onClick={() => {
-            RemoveAllCookies();
-            signOut(getAuth()).then(() => {
-              window.location.reload();
-            });
+            setIsLogoutModal(true);
           }}
         >
           {"->"} or logout right now
@@ -150,6 +147,8 @@ const Form = ({ setGroup, setModalOpen }: Props) => {
         modalOpen={UserVisitedGroupListModalOpen}
         setModalOpen={setUserVisitedGroupListModalOpen}
       />
+
+      <LogoutModal modalOpen={isLogoutModal} setModalOpen={setIsLogoutModal} />
     </div>
   );
 };

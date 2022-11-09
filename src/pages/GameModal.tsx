@@ -589,6 +589,8 @@ const GameModal: React.FC<Props> = ({
                                   <div
                                     style={{
                                       marginLeft: "8px",
+                                      width: "auto",
+                                      textDecoration: "underline",
                                     }}
                                   >
                                     🐧 tried genre:{" "}

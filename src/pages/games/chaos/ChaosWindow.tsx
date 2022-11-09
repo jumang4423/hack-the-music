@@ -40,13 +40,13 @@ const ChaosWindow = ({
     meSelected: (meIndex: number) => {
       switch (meIndex) {
         case 0:
-          return gameSettings.randomTheme.enabled;
+          return gameSettings.randomGenres.enabled;
         case 1:
           return gameSettings.randomSamples.enabled;
         case 2:
-          return gameSettings.randomImages.enabled;
+          return gameSettings.randomTheme.enabled;
         case 3:
-          return gameSettings.randomGenres.enabled;
+          return gameSettings.randomImages.enabled;
         case 4:
           return gameSettings.lifeSoundSampling.enabled;
         case 5:
@@ -80,7 +80,7 @@ const ChaosWindow = ({
           }}
         >
           <Tab
-            label={`${viewState.meSelected(0) ? "✔︎ " : ""}themes`}
+            label={`${viewState.meSelected(0) ? "✔︎ " : ""}genres`}
             {...a11yProps(0)}
           />
           <Tab
@@ -88,11 +88,11 @@ const ChaosWindow = ({
             {...a11yProps(1)}
           />
           <Tab
-            label={`${viewState.meSelected(2) ? "✔︎ " : ""}images`}
+            label={`${viewState.meSelected(2) ? "✔︎ " : ""}themes`}
             {...a11yProps(2)}
           />
           <Tab
-            label={`${viewState.meSelected(3) ? "✔︎ " : ""}genres`}
+            label={`${viewState.meSelected(3) ? "✔︎ " : ""}images`}
             {...a11yProps(3)}
           />
           <Tab
@@ -105,7 +105,7 @@ const ChaosWindow = ({
           />
         </Tabs>
         <TabPanel value={themeViewing} index={0}>
-          <RandomTheme
+          <RandomGenre
             group={group}
             gameSettings={gameSettings}
             setGameSettings={setGameSettings}
@@ -119,14 +119,14 @@ const ChaosWindow = ({
           />
         </TabPanel>
         <TabPanel value={themeViewing} index={2}>
-          <RandomImage
+          <RandomTheme
             group={group}
             gameSettings={gameSettings}
             setGameSettings={setGameSettings}
           />
         </TabPanel>
         <TabPanel value={themeViewing} index={3}>
-          <RandomGenre
+          <RandomImage
             group={group}
             gameSettings={gameSettings}
             setGameSettings={setGameSettings}
