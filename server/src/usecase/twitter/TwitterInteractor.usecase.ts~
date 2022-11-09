@@ -1,0 +1,28 @@
+import { TwitterRepository } from "./interface/repository.usecase";
+import ErrStr from "../../domain/ErrStr.domain";
+import { ErrsEnumeration } from "../../util/err.util";
+
+export class TwitterInteractor {
+  private readonly twitterRepository: TwitterRepository;
+  private response: any;
+  private err: ErrStr;
+
+  constructor(twitterRepository: TwitterRepository) {
+    this.twitterRepository = twitterRepository;
+    this.err = new ErrStr({});
+  }
+
+  handleGetRandomGenreFromTwitter = async () => {
+    const [randomTweet, err] =
+      await this.twitterRepository.getRandomGenreFromTwitter();
+    this.response = twitter;
+    this.err = err;
+  };
+
+  getResponseInsertTwitter = (): Twitter => {
+    if (this.err.IsError()) {
+      throw new Error(this.err.GetError());
+    }
+    return this.response!;
+  };
+}

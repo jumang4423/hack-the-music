@@ -28,6 +28,18 @@ import MusicUploadModal from "./MusicUploadModal";
 // @ts-ignore
 import Cookies from "js-cookie";
 
+export type UploadedMusic = {
+  musicId: string;
+  name: string;
+  url: string;
+  idUploadedBy: string;
+  userName: string;
+  love: number;
+  surprised: number;
+  crazy: number;
+  beautiful: number;
+};
+
 const refresh = () => {
   window.location.reload();
 };
@@ -83,6 +95,29 @@ const UpdateTimeLimit = (groupId: string, timeLimit: number) => {
   set(timeLimitRef, timeLimit);
 };
 
+const joinedGenreGame = (
+  music: UploadedMusic,
+  gameSettings: ChaosGameSettingsType
+) => {
+  return gameSettings.randomGenres.genres.some((genre) => {
+    console.log(genre.userId, music);
+    return genre.userId === music.idUploadedBy;
+  });
+};
+
+const getGenreName = (
+  gameSettings: ChaosGameSettingsType,
+  userId: string
+): string => {
+  const genre = gameSettings.randomGenres.genres.find(
+    (genre) => genre.userId === userId
+  );
+  if (genre) {
+    return genre.genreName;
+  }
+  return "error";
+};
+
 const UpdateGameSettings = (
   group: Group,
   newSettings: ChaosGameSettingsType
@@ -96,17 +131,6 @@ const UpdateGameSettings = (
   set(gameModeRef, group.gameMode);
 
   return void 0;
-};
-
-export type UploadedMusic = {
-  musicId: string;
-  name: string;
-  url: string;
-  idUploadedBy: string;
-  love: number;
-  surprised: number;
-  crazy: number;
-  beautiful: number;
 };
 
 type Props = {
@@ -140,6 +164,13 @@ const GameModal: React.FC<Props> = ({
     lifeSoundSampling: {
       enabled: false,
       generativeId: 0,
+    },
+    randomVideos: {
+      enabled: false,
+    },
+    randomGenres: {
+      enabled: false,
+      genres: [],
     },
     sceneIndex: 0,
     timeLimitMin: 30,
@@ -245,7 +276,7 @@ const GameModal: React.FC<Props> = ({
   }, [group]);
 
   useEffect(() => {
-    if (viewState.isMeAdmin() && group.groupId !== "") {
+    if (group.groupId !== "") {
       UpdateGameSettings(group, gameSettings);
     }
   }, [gameSettings]);
@@ -528,6 +559,46 @@ const GameModal: React.FC<Props> = ({
                         {uploadedMusics.map((music, index) => {
                           return (
                             <div key={index}>
+                              <div
+                                style={{
+                                  width: "100%",
+                                  marginTop: "24px",
+                                  marginLeft: "10px",
+                                  marginBottom: "-16px",
+                                  display: "flex",
+                                  flexDirection: "row",
+                                }}
+                              >
+                                <div>{index + 1}.</div>{" "}
+                                <div
+                                  style={{
+                                    marginLeft: "8px",
+                                  }}
+                                >
+                                  {music.name} by {music.userName}
+                                </div>
+                              </div>
+                              {joinedGenreGame(music, gameSettings) && (
+                                <div
+                                  style={{
+                                    marginTop: "16px",
+                                    marginBottom: "-16px",
+                                    marginLeft: "24px",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      marginLeft: "8px",
+                                    }}
+                                  >
+                                    🐧 tried genre:{" "}
+                                    {getGenreName(
+                                      gameSettings,
+                                      music.idUploadedBy
+                                    )}
+                                  </div>
+                                </div>
+                              )}
                               <ResultMusicPlayer
                                 music={music}
                                 index={index}

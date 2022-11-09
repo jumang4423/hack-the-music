@@ -19,25 +19,6 @@ const ResultMusicPlayer = ({ music, index, group }: Props) => {
     <div>
       <div
         style={{
-          width: "100%",
-          marginTop: "24px",
-          marginLeft: "10px",
-          marginBottom: "-16px",
-          display: "flex",
-          flexDirection: "row",
-        }}
-      >
-        <div>{index + 1}.</div>{" "}
-        <div
-          style={{
-            marginLeft: "8px",
-          }}
-        >
-          {music.name}
-        </div>
-      </div>
-      <div
-        style={{
           display: "flex",
           flexDirection: "row",
           marginBottom: "-18px",

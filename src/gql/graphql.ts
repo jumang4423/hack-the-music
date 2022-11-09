@@ -37,6 +37,7 @@ export type Image = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  getRandomGenre: Scalars['String'];
   insertGroup: Group;
   insertUser: User;
   randomImage: Image;

@@ -7,6 +7,7 @@ import { useState } from "react";
 import RandomTheme from "./RandomTheme";
 import RandomSample from "./RandomSample";
 import RandomImage from "./RandomImage";
+import RandomGenre from "./RandomGenre";
 import { TabPanel } from "../../../components/TabPanel";
 
 type Props = {
@@ -45,7 +46,11 @@ const ChaosWindow = ({
         case 2:
           return gameSettings.randomImages.enabled;
         case 3:
+          return gameSettings.randomGenres.enabled;
+        case 4:
           return gameSettings.lifeSoundSampling.enabled;
+        case 5:
+          return gameSettings.randomVideos.enabled;
         default:
           return false;
       }
@@ -87,12 +92,16 @@ const ChaosWindow = ({
             {...a11yProps(2)}
           />
           <Tab
-            label={`${viewState.meSelected(3) ? "✔︎ " : ""}⚠️ generative`}
+            label={`${viewState.meSelected(3) ? "✔︎ " : ""}genres`}
             {...a11yProps(3)}
           />
           <Tab
-            label={`${viewState.meSelected(4) ? "✔︎ " : ""}⚠️ videos`}
+            label={`${viewState.meSelected(4) ? "✔︎ " : ""}⚠️ generative`}
             {...a11yProps(4)}
+          />
+          <Tab
+            label={`${viewState.meSelected(5) ? "✔︎ " : ""}⚠️ videos`}
+            {...a11yProps(5)}
           />
         </Tabs>
         <TabPanel value={themeViewing} index={0}>
@@ -117,12 +126,19 @@ const ChaosWindow = ({
           />
         </TabPanel>
         <TabPanel value={themeViewing} index={3}>
+          <RandomGenre
+            group={group}
+            gameSettings={gameSettings}
+            setGameSettings={setGameSettings}
+          />
+        </TabPanel>
+        <TabPanel value={themeViewing} index={4}>
           <div>⚠️ generative mode (developing)</div>
           <div> generate sound via programming</div>
           <div> we can collaborate on making weird sounds and sequences</div>
           <div> and we can record them so we can use them in the game</div>
         </TabPanel>
-        <TabPanel value={themeViewing} index={4}>
+        <TabPanel value={themeViewing} index={5}>
           <div>⚠️ video mode (developing)</div>
           <div> choose random videos from server</div>
           <div> we create a bgm for the video</div>

@@ -24,7 +24,6 @@ export const UserVisitGroupDriver = async (
 
     return [{ ...user, accessedGroupIDs: newArr }, new ErrStr({})];
   } catch (err: unknown) {
-    console.log(err);
     return [null, new ErrStr({ isErr: true, errStr: (err as Error).message })];
   }
 };

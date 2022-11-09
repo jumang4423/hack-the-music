@@ -164,3 +164,9 @@ export const GET_GROUPS = gql`
     }
   }
 `;
+
+export const GET_RANDOM_GENRE = gql`
+  mutation GetRandomGenre {
+    getRandomGenre
+  }
+`;

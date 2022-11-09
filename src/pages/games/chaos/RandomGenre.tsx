@@ -1,0 +1,201 @@
+import { useState } from "react";
+import { ChaosGameSettingsType } from "../../../models/chaosGameType";
+import { FormControlLabel } from "@mui/material";
+import { Checkbox } from "@mui/material";
+import { RandomGenresEnableCheckboxHandleChange } from "./fun_RandomGenre";
+import { useMutation } from "@apollo/client";
+import { GET_RANDOM_GENRE } from "../../../fun/apis";
+import GenericModal from "../../../components/GenericModal";
+import HackyButton from "../../../components/HackyButton";
+import ImageInputBox from "./ImageInputBox";
+import ImageUploaderModal from "./ImageUploaderModal";
+import { Group } from "../../../gql/graphql";
+import { IsMeAdminRn } from "../../../fun/isMeAdminRn";
+// @ts-ignore
+import Cookies from "js-cookie";
+
+const userIdME = (userId: string) => {
+  return userId === Cookies.get("userId");
+};
+
+type Props = {
+  group: Group;
+  gameSettings: ChaosGameSettingsType;
+  setGameSettings: (gameSettings: ChaosGameSettingsType) => void;
+};
+
+const RandomGenre = ({ group, gameSettings, setGameSettings }: Props) => {
+  const [GetGenre, { loading }] = useMutation(GET_RANDOM_GENRE, {
+    onCompleted({ getRandomGenre }) {
+      if (
+        !gameSettings.randomGenres.genres.some((genre: any) => {
+          return genre.userId === Cookies.get("userId");
+        })
+      )
+        setGameSettings({
+          ...gameSettings,
+          randomGenres: {
+            ...gameSettings.randomGenres,
+            genres: [
+              ...gameSettings.randomGenres.genres,
+              {
+                userId: Cookies.get("userId"),
+                name: Cookies.get("name"),
+                genreName: getRandomGenre,
+              },
+            ],
+          },
+        });
+      else {
+        const newState = Object.assign({}, gameSettings);
+        newState.randomGenres.genres = newState.randomGenres.genres.map(
+          (genre: any) => {
+            if (genre.userId === Cookies.get("userId")) {
+              genre.genreName = getRandomGenre;
+            }
+            return genre;
+          }
+        );
+        setGameSettings(newState);
+      }
+    },
+  });
+  const viewState = {
+    isMeAdminRn: IsMeAdminRn(group),
+    cancelable: () =>
+      !gameSettings.randomGenres.genres.some((genre: any) => {
+        return genre.userId === Cookies.get("userId");
+      }),
+  };
+  return (
+    <div
+      style={{
+        height: "70vh",
+        overflowY: "scroll",
+        marginTop: "-32px",
+      }}
+    >
+      <h3
+        style={{
+          marginTop: "16px",
+          marginBottom: "16px",
+        }}
+      >
+        🐧 Random Genre
+      </h3>
+
+      <FormControlLabel
+        style={{
+          marginTop: "-10px",
+        }}
+        control={
+          <Checkbox
+            checked={gameSettings.randomGenres.enabled}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              RandomGenresEnableCheckboxHandleChange(
+                event,
+                gameSettings,
+                setGameSettings
+              );
+            }}
+          />
+        }
+        label="enabled"
+        disabled={!viewState.isMeAdminRn}
+      />
+
+      <div hidden={!gameSettings.randomGenres.enabled}>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            marginTop: "0px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: "8px",
+              marginBottom: "16px",
+            }}
+          >
+            <div
+              style={{
+                margin: "4px 8px 8px 0px",
+              }}
+            >
+              <HackyButton
+                prefer={true}
+                isDisabled={loading}
+                name={loading ? "loading..." : "🌏 join the genre party"}
+                onClick={() => {
+                  GetGenre();
+                }}
+              />
+            </div>
+            <div
+              style={{
+                margin: "4px 8px 8px 0px",
+              }}
+            >
+              <HackyButton
+                isError={true}
+                isDisabled={viewState.cancelable()}
+                name={"cancel"}
+                onClick={() => {
+                  const newState = Object.assign({}, gameSettings);
+                  newState.randomGenres.genres =
+                    newState.randomGenres.genres.filter((genre: any) => {
+                      return genre.userId !== Cookies.get("userId");
+                    });
+
+                  setGameSettings(newState);
+                }}
+              />
+            </div>
+          </div>
+
+          {gameSettings.randomGenres.genres.map(
+            (genreBox: any, index: number) => {
+              return (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "8px",
+                      height: "24px",
+                      backgroundColor: userIdME(genreBox.userId)
+                        ? "yellowgreen"
+                        : "gray",
+                      margin: "4px",
+                    }}
+                  />
+                  <div>
+                    <div
+                      style={{
+                        fontSize: userIdME(genreBox.userId) ? "1.2em" : "1em",
+                      }}
+                      key={genreBox.name + index}
+                    >
+                      {userIdME(genreBox.userId) && "💫 "}
+                      {genreBox.name}: {genreBox.genreName}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default RandomGenre;

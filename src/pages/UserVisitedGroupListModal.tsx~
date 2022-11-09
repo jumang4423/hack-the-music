@@ -11,7 +11,7 @@ import { get, getDatabase, ref } from "firebase/database";
 const GetRageList = async (
   setIsRageList: (arg0: boolean[]) => void,
   groups: Group[]
-): void => {
+): Promise<void> => {
   const IsRageArr = new Array(groups.length).fill(false);
   for (let i = 0; i < groups.length; i++) {
     const db = getDatabase();
@@ -26,8 +26,6 @@ const GetRageList = async (
   }
 
   setIsRageList(IsRageArr);
-
-  return void 0;
 };
 
 const UserVisitedGroupList = ({
@@ -61,7 +59,17 @@ const UserVisitedGroupList = ({
     }
   }, [data2, loading2]);
 
-  if (loading || loading2) return <div>Loading...</div>;
+  if (loading || loading2 || true)
+    return (
+      <div
+        style={{
+          margin: "32px",
+          width: "540px",
+        }}
+      >
+        Loading...
+      </div>
+    );
 
   return (
     <div
@@ -110,7 +118,9 @@ const UserVisitedGroupList = ({
                   >
                     {group.groupId}
                     {isRageList[index] && (
-                      <div style={{ color: "red" }}>(raged)</div>
+                      <div style={{ color: "green", marginLeft: "8px" }}>
+                        (raged)
+                      </div>
                     )}
                   </div>
                   <div

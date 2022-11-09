@@ -49,7 +49,6 @@ const NewSessionModal: React.FC<Props> = ({
   useEffect(() => {
     if (data) {
       setGroup(data.insertGroup);
-      console.log(data.insertGroup);
       setIsNewUser(true);
       UserVisitGroup({
         variables: {

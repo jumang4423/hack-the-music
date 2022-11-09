@@ -16,6 +16,13 @@ export type ChaosGameSettingsType = {
     enabled: boolean;
     generativeId: number;
   };
+  randomVideos: {
+    enabled: boolean;
+  };
+  randomGenres: {
+    enabled: boolean;
+    genres: Array<{ userId: string; name: string; genreName: string }>;
+  };
   sceneIndex: number;
   timeLimitMin: number;
   gameStarted: boolean;

@@ -15,7 +15,9 @@ type Props = {
 const UserModal = ({ modalOpen, setModalOpen }: Props) => {
   const [cookies, setCoookie] = useCookies();
   const [isNameError, setIsNameError] = useState(false);
-  const { data, error, refetch } = useQuery(GET_USER, {});
+  const { data, error, refetch } = useQuery(GET_USER, {
+    variables: { userId: cookies.userId },
+  });
   const [insertUser, { data: data2, error: error2, loading }] =
     useMutation(INSERT_USER);
   const [userName, setUserName] = useState("");
@@ -27,6 +29,7 @@ const UserModal = ({ modalOpen, setModalOpen }: Props) => {
     }
     if (data) {
       setCoookie("name", data.user.name);
+      refetch({ userId: cookies.userId });
       setModalOpen(false);
     }
   }, [error, data]);

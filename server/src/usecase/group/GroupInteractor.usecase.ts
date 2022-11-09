@@ -66,13 +66,9 @@ export class GroupInteractor {
       groupIds.length > 10
         ? groupIds.slice(groupIds.length - 10, groupIds.length)
         : groupIds;
-
-    console.log(pagedGroupIds);
-
     const [groups, err] = await this.groupRepository.findGroupsByIds(
       pagedGroupIds
     );
-    console.log(groups.map((group) => group.groupId));
     this.response = groups;
     this.err = err;
   };

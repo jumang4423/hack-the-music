@@ -11,12 +11,11 @@ import { get, getDatabase, ref } from "firebase/database";
 const GetRageList = async (
   setIsRageList: (arg0: boolean[]) => void,
   groups: Group[]
-): void => {
+): Promise<void> => {
   const IsRageArr = new Array(groups.length).fill(false);
+  const db = getDatabase();
   for (let i = 0; i < groups.length; i++) {
-    const db = getDatabase();
     const rageRef = ref(db, `groups/${groups[i].groupId}/isRageQuit`);
-
     const snapshot = get(rageRef);
     const isRageQuit = (await snapshot).val();
 
@@ -26,8 +25,6 @@ const GetRageList = async (
   }
 
   setIsRageList(IsRageArr);
-
-  return void 0;
 };
 
 const UserVisitedGroupList = ({
@@ -61,7 +58,17 @@ const UserVisitedGroupList = ({
     }
   }, [data2, loading2]);
 
-  if (loading || loading2) return <div>Loading...</div>;
+  if (loading || loading2)
+    return (
+      <div
+        style={{
+          margin: "32px",
+          width: "540px",
+        }}
+      >
+        Loading...
+      </div>
+    );
 
   return (
     <div
@@ -147,7 +154,7 @@ const UserVisitedGroupListModal = ({
     <GenericModal
       open={modalOpen}
       handleClose={() => setModalOpen(false)}
-      title="✈️ user visited group list"
+      title="✈️ visited group history"
     >
       {modalOpen && (
         <UserVisitedGroupList setModalOpen={setModalOpen} setGroup={setGroup} />

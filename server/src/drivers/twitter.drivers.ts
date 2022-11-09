@@ -1,0 +1,45 @@
+import { Client } from "twitter-api-sdk";
+import ErrStr from "../domain/ErrStr.domain";
+
+const TwitterKeys = {
+  apiKey: "9JVOeAsIcYRmHqaIZ0s4tDyKR",
+  apiSecret: "XOshbRv2QAzHxmbfFXkmqKvF7DdItVM9gHVYrizjhTc8eFXQV7",
+  bearerToken:
+    "AAAAAAAAAAAAAAAAAAAAAMR4jAEAAAAAmCdMYABr0x8lwRjdVKgsRkwk6uM%3DTqLFzLkKcyUoJ2A3husa9OaIjM24A6IKx7JM699Pwq0ZRu7ur1",
+};
+const TwitterClient = new Client(TwitterKeys.bearerToken);
+const ExplictCache: any = {
+  tweets: [],
+  lastUpdated: new Date(),
+};
+
+export const GetTweetFromUser = async (
+  twitterId: string
+): Promise<[string, ErrStr]> => {
+  // from recent 24h, get one random tweet
+  const oneDayAgo = new Date();
+  oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+
+  if (
+    ExplictCache.tweets.length === 0 ||
+    ExplictCache.lastUpdated < oneDayAgo
+  ) {
+    // update twet
+    const response = await TwitterClient.tweets.tweetsRecentSearch({
+      query: `from:${twitterId}`,
+      max_results: 50,
+    });
+    const actuall_len = response?.data?.length || 0;
+    const random_index = Math.floor(Math.random() * actuall_len);
+    const random_tweet = response?.data?.[random_index]!;
+    ExplictCache.tweets = response?.data || [];
+    ExplictCache.lastUpdated = new Date();
+
+    return [random_tweet.text!, new ErrStr({})];
+  } else {
+    const random_index = Math.floor(Math.random() * ExplictCache.tweets.length);
+    const random_tweet = ExplictCache.tweets[random_index]["text"];
+
+    return [random_tweet, new ErrStr({})];
+  }
+};

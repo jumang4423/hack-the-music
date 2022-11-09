@@ -69,7 +69,8 @@ const Form = ({ setGroup, setModalOpen }: Props) => {
       <h1
         style={{
           color: ColorObj.black,
-          marginBottom: "16px",
+          marginBottom: "0px",
+          fontSize: "34px",
         }}
       >
         # hack-the-music
@@ -125,7 +126,7 @@ const Form = ({ setGroup, setModalOpen }: Props) => {
             setUserVisitedGroupListModalOpen(true);
           }}
         >
-          {"->"} 🌏 visited group list
+          {"->"} 🌏 visited group history
         </p>
         <p
           style={{
@@ -143,6 +144,7 @@ const Form = ({ setGroup, setModalOpen }: Props) => {
           {"->"} or logout right now
         </p>
       </div>
+
       <UserVisitedGroupListModal
         setGroup={setGroup}
         modalOpen={UserVisitedGroupListModalOpen}

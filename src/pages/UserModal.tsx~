@@ -75,6 +75,8 @@ const UserModal = ({ modalOpen, setModalOpen }: Props) => {
             placeholder="name"
             value={userName}
             onChange={(e: any) => setUserName(e.target.value)}
+            error={isNameError}
+            helperText="name must be between 3 and 20 characters"
           />
 
           <HackyButton

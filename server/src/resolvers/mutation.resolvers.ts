@@ -10,6 +10,8 @@ import { GqlThemeRepository } from "../repository/theme/GqlThemeRepository.repos
 import { ThemeInteractor } from "../usecase/theme/ThemeInteractor.usecase";
 import { GqlUserRepository } from "../repository/user/GqlUserRepository.repository";
 import { UserInteractor } from "../usecase/user/UserInteractor.usecase";
+import { GqlTwitterRepository } from "../repository/twitter/GqlTwitterRepository.repository";
+import { TwitterInteractor } from "../usecase/twitter/TwitterInteractor.usecase";
 
 export const mutationResolvers: MutationResolvers = {
   insertGroup: async (
@@ -83,5 +85,11 @@ export const mutationResolvers: MutationResolvers = {
     const usecase = new UserInteractor(repository);
     await usecase.handleUserVisitGroup({ userId, groupId });
     return usecase.getResponseUserVisitGroup();
+  },
+  getRandomGenre: async (): Promise<string> => {
+    const repository = new GqlTwitterRepository();
+    const usecase = new TwitterInteractor(repository);
+    await usecase.handleGetRandomGenreFromTwitter();
+    return usecase.getResponseGetRandomGenreFromTwitter();
   },
 };

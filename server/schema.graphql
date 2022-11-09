@@ -1,4 +1,3 @@
-
 type Group {
    groupId: String!
    name: String!
@@ -52,4 +51,6 @@ type Mutation {
   # user
   insertUser(userId: String!, name: String!): User!
   userVisitGroup(userId: String!, groupId: String!): User!
+  # twitter
+  getRandomGenre: String!
 }

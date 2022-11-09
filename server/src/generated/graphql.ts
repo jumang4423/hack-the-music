@@ -29,6 +29,7 @@ export type Image = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  getRandomGenre: Scalars['String'];
   insertGroup: Group;
   insertUser: User;
   randomImage: Image;
@@ -251,6 +252,7 @@ export type ImageResolvers<ContextType = any, ParentType extends ResolversParent
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  getRandomGenre?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   insertGroup?: Resolver<ResolversTypes['Group'], ParentType, ContextType, RequireFields<MutationInsertGroupArgs, 'adminUserId' | 'gameMode' | 'groupId' | 'name'>>;
   insertUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationInsertUserArgs, 'name' | 'userId'>>;
   randomImage?: Resolver<ResolversTypes['Image'], ParentType, ContextType>;

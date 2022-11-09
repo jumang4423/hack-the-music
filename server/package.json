@@ -16,6 +16,7 @@
     "firebase": "^9.13.0",
     "firebase-admin": "^11.2.0",
     "graphql": "^15.7.2",
+    "twitter-api-sdk": "^1.2.1",
     "uuidv4": "^6.2.0"
   },
   "devDependencies": {

@@ -1,3 +1,21 @@
+* {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    user-select: none;
+      -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+::selection { background: transparent; }
+::-moz-selection { background: transparent; }
+
 :root {
   font-family: "IoSevka", Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
@@ -13,6 +31,11 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+
+.dark-mode {
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #121212;
 }
 
 a {
