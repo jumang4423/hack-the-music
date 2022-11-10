@@ -1,4 +1,10 @@
-import { Theme, Sample, Image, User } from "../generated/graphql";
+import {
+  Theme,
+  Sample,
+  Image,
+  User,
+  AdditionalTheme,
+} from "../generated/graphql";
 import { Group, MutationResolvers } from "../generated/graphql";
 import { GqlGroupRepository } from "../repository/group/GqlGroupRepository.repository";
 import { GroupInteractor } from "../usecase/group/GroupInteractor.usecase";
@@ -55,6 +61,15 @@ export const mutationResolvers: MutationResolvers = {
     const usecase = new ThemeInteractor(repository);
     await usecase.handleGetRandomTheme();
     return usecase.getResponseGetRandomTheme();
+  },
+  randomAdditionalTheme: async (
+    _,
+    { toUserId, toName }
+  ): Promise<AdditionalTheme> => {
+    const repository = new GqlThemeRepository();
+    const usecase = new ThemeInteractor(repository);
+    await usecase.handleGetRandomAdditionalTheme({ toUserId, toName });
+    return usecase.getResponseGetRandomAdditionalTheme();
   },
   randomSample: async (): Promise<Sample> => {
     const repository = new GqlSampleRepository();

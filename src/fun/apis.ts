@@ -170,3 +170,13 @@ export const GET_RANDOM_GENRE = gql`
     getRandomGenre
   }
 `;
+
+export const GET_RANDOM_ADDITIONAL_THEME = gql`
+  mutation GetRandomAdditionalTheme($toUserId: String!, $toName: String!) {
+    randomAdditionalTheme(toUserId: $toUserId, toName: $toName) {
+      content
+      toUserId
+      toName
+    }
+  }
+`;

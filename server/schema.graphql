@@ -16,7 +16,13 @@ type Theme {
    content: String!
    description: String
    idUploadedBy: String!
- }
+}
+
+type AdditionalTheme {
+  content: String!
+  toUserId: String!
+  toName: String!
+}
 
 type Sample {
   url: String!
@@ -45,6 +51,7 @@ type Mutation {
   uploadImage(url: String!, description: String, idUploadedBy: String!): Image!
   # generation
   randomTheme: Theme!
+  randomAdditionalTheme(toUserId: String!, toName: String!): AdditionalTheme!
   randomSample: Sample!
   randomImage: Image!
   randomImages(count: Int!): [Image]!

@@ -15,6 +15,13 @@ export type Scalars = {
   Upload: any;
 };
 
+export type AdditionalTheme = {
+  __typename?: 'AdditionalTheme';
+  content: Scalars['String'];
+  toName: Scalars['String'];
+  toUserId: Scalars['String'];
+};
+
 export enum CacheControlScope {
   Private = 'PRIVATE',
   Public = 'PUBLIC'
@@ -40,6 +47,7 @@ export type Mutation = {
   getRandomGenre: Scalars['String'];
   insertGroup: Group;
   insertUser: User;
+  randomAdditionalTheme: AdditionalTheme;
   randomImage: Image;
   randomImages: Array<Maybe<Image>>;
   randomSample: Sample;
@@ -62,6 +70,12 @@ export type MutationInsertGroupArgs = {
 export type MutationInsertUserArgs = {
   name: Scalars['String'];
   userId: Scalars['String'];
+};
+
+
+export type MutationRandomAdditionalThemeArgs = {
+  toName: Scalars['String'];
+  toUserId: Scalars['String'];
 };
 
 

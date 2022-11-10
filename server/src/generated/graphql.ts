@@ -12,6 +12,13 @@ export type Scalars = {
   Float: number;
 };
 
+export type AdditionalTheme = {
+  __typename?: 'AdditionalTheme';
+  content: Scalars['String'];
+  toName: Scalars['String'];
+  toUserId: Scalars['String'];
+};
+
 export type Group = {
   __typename?: 'Group';
   adminUserId: Scalars['String'];
@@ -32,6 +39,7 @@ export type Mutation = {
   getRandomGenre: Scalars['String'];
   insertGroup: Group;
   insertUser: User;
+  randomAdditionalTheme: AdditionalTheme;
   randomImage: Image;
   randomImages: Array<Maybe<Image>>;
   randomSample: Sample;
@@ -54,6 +62,12 @@ export type MutationInsertGroupArgs = {
 export type MutationInsertUserArgs = {
   name: Scalars['String'];
   userId: Scalars['String'];
+};
+
+
+export type MutationRandomAdditionalThemeArgs = {
+  toName: Scalars['String'];
+  toUserId: Scalars['String'];
 };
 
 
@@ -210,6 +224,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  AdditionalTheme: ResolverTypeWrapper<AdditionalTheme>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Group: ResolverTypeWrapper<Group>;
   Image: ResolverTypeWrapper<Image>;
@@ -224,6 +239,7 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
+  AdditionalTheme: AdditionalTheme;
   Boolean: Scalars['Boolean'];
   Group: Group;
   Image: Image;
@@ -234,6 +250,13 @@ export type ResolversParentTypes = ResolversObject<{
   String: Scalars['String'];
   Theme: Theme;
   User: User;
+}>;
+
+export type AdditionalThemeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AdditionalTheme'] = ResolversParentTypes['AdditionalTheme']> = ResolversObject<{
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  toName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  toUserId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 }>;
 
 export type GroupResolvers<ContextType = any, ParentType extends ResolversParentTypes['Group'] = ResolversParentTypes['Group']> = ResolversObject<{
@@ -255,6 +278,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   getRandomGenre?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   insertGroup?: Resolver<ResolversTypes['Group'], ParentType, ContextType, RequireFields<MutationInsertGroupArgs, 'adminUserId' | 'gameMode' | 'groupId' | 'name'>>;
   insertUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationInsertUserArgs, 'name' | 'userId'>>;
+  randomAdditionalTheme?: Resolver<ResolversTypes['AdditionalTheme'], ParentType, ContextType, RequireFields<MutationRandomAdditionalThemeArgs, 'toName' | 'toUserId'>>;
   randomImage?: Resolver<ResolversTypes['Image'], ParentType, ContextType>;
   randomImages?: Resolver<Array<Maybe<ResolversTypes['Image']>>, ParentType, ContextType, RequireFields<MutationRandomImagesArgs, 'count'>>;
   randomSample?: Resolver<ResolversTypes['Sample'], ParentType, ContextType>;
@@ -293,6 +317,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  AdditionalTheme?: AdditionalThemeResolvers<ContextType>;
   Group?: GroupResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;

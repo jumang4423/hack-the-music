@@ -1,9 +1,11 @@
 import ErrStr from "../../domain/ErrStr.domain";
-import { Theme } from "../../generated/graphql";
+import { Theme, AdditionalTheme } from "../../generated/graphql";
 import { ThemeRepository } from "../../usecase/theme/interface/repository.usecase";
 import { GetRandomThemeDriver } from "../../drivers/getRandomTheme.drivers";
 import { GetCollLenDriver } from "../../drivers/getCollLen.drivers";
 import { InsertThemeDriver } from "../../drivers/insertTheme.drivers";
+// domain
+import { AdditionalThemePool } from "../../domain/AdditionalThemePool.domain";
 
 export class GqlThemeRepository implements ThemeRepository {
   public async getRandomTheme(): Promise<[Theme | null, ErrStr]> {
@@ -18,6 +20,16 @@ export class GqlThemeRepository implements ThemeRepository {
     }
 
     return [randomTheme, new ErrStr({ isErr: false })];
+  }
+
+  public async getRandomAdditionalTheme(
+    toUserId: string,
+    toName: string
+  ): Promise<[AdditionalTheme | null, ErrStr]> {
+    const poolObj = new AdditionalThemePool(toUserId, toName);
+    const additionalTheme = await poolObj.getAdditionalTheme();
+
+    return [additionalTheme, new ErrStr({})];
   }
 
   public async uploadTheme(theme: Theme): Promise<[Theme | null, ErrStr]> {

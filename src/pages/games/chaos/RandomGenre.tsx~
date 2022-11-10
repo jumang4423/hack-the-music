@@ -1,14 +1,10 @@
-import { useState } from "react";
 import { ChaosGameSettingsType } from "../../../models/chaosGameType";
 import { FormControlLabel } from "@mui/material";
 import { Checkbox } from "@mui/material";
 import { RandomGenresEnableCheckboxHandleChange } from "./fun_RandomGenre";
 import { useMutation } from "@apollo/client";
 import { GET_RANDOM_GENRE } from "../../../fun/apis";
-import GenericModal from "../../../components/GenericModal";
 import HackyButton from "../../../components/HackyButton";
-import ImageInputBox from "./ImageInputBox";
-import ImageUploaderModal from "./ImageUploaderModal";
 import { Group } from "../../../gql/graphql";
 import { IsMeAdminRn } from "../../../fun/isMeAdminRn";
 // @ts-ignore
@@ -24,7 +20,7 @@ type Props = {
   setGameSettings: (gameSettings: ChaosGameSettingsType) => void;
 };
 
-const RandomGenre = ({ group, gameSettings, setGameSettings }) => {
+const RandomGenre = ({ group, gameSettings, setGameSettings }: Props) => {
   const [GetGenre, { loading }] = useMutation(GET_RANDOM_GENRE, {
     onCompleted({ getRandomGenre }) {
       if (
@@ -126,10 +122,6 @@ const RandomGenre = ({ group, gameSettings, setGameSettings }) => {
               style={{
                 margin: "4px 8px 8px 0px",
               }}
-              hidden={
-                gameSettings.randomImages.images.length >= 5 ||
-                !viewState.isMeAdminRn
-              }
             >
               <HackyButton
                 prefer={true}
@@ -144,10 +136,6 @@ const RandomGenre = ({ group, gameSettings, setGameSettings }) => {
               style={{
                 margin: "4px 8px 8px 0px",
               }}
-              hidden={
-                gameSettings.randomImages.images.length >= 5 ||
-                !viewState.isMeAdminRn
-              }
             >
               <HackyButton
                 isError={true}
@@ -168,7 +156,6 @@ const RandomGenre = ({ group, gameSettings, setGameSettings }) => {
 
           {gameSettings.randomGenres.genres.map(
             (genreBox: any, index: number) => {
-              const userId = Cookies.get("userId");
               return (
                 <div
                   style={{
@@ -182,7 +169,7 @@ const RandomGenre = ({ group, gameSettings, setGameSettings }) => {
                       height: "24px",
                       backgroundColor: userIdME(genreBox.userId)
                         ? "yellowgreen"
-                        : "black",
+                        : "gray",
                       margin: "4px",
                     }}
                   />
@@ -194,7 +181,7 @@ const RandomGenre = ({ group, gameSettings, setGameSettings }) => {
                       key={genreBox.name + index}
                     >
                       {userIdME(genreBox.userId) && "💫 "}
-                      {genreBox.name} will try {genreBox.genreName}
+                      {genreBox.name}: {genreBox.genreName}
                     </div>
                   </div>
                 </div>

@@ -1,16 +1,13 @@
-import { useState } from "react";
 import { ChaosGameSettingsType } from "../../../models/chaosGameType";
 import { FormControlLabel } from "@mui/material";
 import { Checkbox } from "@mui/material";
 import { RandomGenresEnableCheckboxHandleChange } from "./fun_RandomGenre";
 import { useMutation } from "@apollo/client";
 import { GET_RANDOM_GENRE } from "../../../fun/apis";
-import GenericModal from "../../../components/GenericModal";
 import HackyButton from "../../../components/HackyButton";
-import ImageInputBox from "./ImageInputBox";
-import ImageUploaderModal from "./ImageUploaderModal";
 import { Group } from "../../../gql/graphql";
 import { IsMeAdminRn } from "../../../fun/isMeAdminRn";
+import { Tooltip } from "@mui/material";
 // @ts-ignore
 import Cookies from "js-cookie";
 
@@ -177,17 +174,20 @@ const RandomGenre = ({ group, gameSettings, setGameSettings }: Props) => {
                       margin: "4px",
                     }}
                   />
-                  <div>
+                  <Tooltip title={"click to copy genre"} placement="top">
                     <div
                       style={{
                         fontSize: userIdME(genreBox.userId) ? "1.2em" : "1em",
                       }}
                       key={genreBox.name + index}
+                      onClick={() => {
+                        navigator.clipboard.writeText(genreBox.genreName);
+                      }}
                     >
                       {userIdME(genreBox.userId) && "💫 "}
                       {genreBox.name}: {genreBox.genreName}
                     </div>
-                  </div>
+                  </Tooltip>
                 </div>
               );
             }

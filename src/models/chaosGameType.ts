@@ -1,4 +1,4 @@
-import { Theme, Sample, Image } from "../gql/graphql";
+import { Theme, Sample, Image, AdditionalTheme } from "../gql/graphql";
 export type ChaosGameSettingsType = {
   randomTheme: {
     enabled: boolean;
@@ -22,6 +22,10 @@ export type ChaosGameSettingsType = {
   randomGenres: {
     enabled: boolean;
     genres: Array<{ userId: string; name: string; genreName: string }>;
+  };
+  randomAdditionalThemes: {
+    enabled: boolean;
+    additionalThemes: Array<AdditionalTheme>;
   };
   sceneIndex: number;
   timeLimitMin: number;

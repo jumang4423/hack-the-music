@@ -1,5 +1,5 @@
 import { Drawer, Tooltip } from "@mui/material";
-import { Group } from "../gql/graphql";
+import { Group, AdditionalTheme } from "../gql/graphql";
 import { GameModeEnum } from "../models/gameMode";
 import ChaosModeGame from "./games/chaos/ChaosModeGame";
 import { ChaosGameSettingsType } from "../models/chaosGameType";
@@ -8,6 +8,8 @@ import TimeLimitBox from "./games/TimeLimitBox";
 import Devider from "../components/Devider";
 import HackyButton from "../components/HackyButton";
 import ShareGroupIdModal from "./ShareGroupIdModal";
+import GameSettingsModal from "./GameSettingsModal";
+import AdditionalThemeModal from "./AdditionalThemeModal";
 import { RemoveAllCookies } from "../fun/removeAllCookie";
 import { getAuth, signOut } from "firebase/auth";
 import ResultMusicPlayer from "./ResultMusicPlayer";
@@ -25,6 +27,7 @@ import {
 import { IsMeAdminRn } from "../fun/isMeAdminRn";
 import { RandomId } from "../fun/randomId";
 import MusicUploadModal from "./MusicUploadModal";
+
 // @ts-ignore
 import Cookies from "js-cookie";
 
@@ -42,6 +45,47 @@ export type UploadedMusic = {
 
 const refresh = () => {
   window.location.reload();
+};
+
+const userAdditionalList = (
+  userId: string,
+  gameSettings: ChaosGameSettingsType
+): Array<AdditionalTheme> => {
+  const userAdditionalList =
+    gameSettings.randomAdditionalThemes.additionalThemes.filter(
+      (additionalTheme) => additionalTheme.toUserId === userId
+    );
+
+  return userAdditionalList;
+};
+
+const MeJoinGroupCall = async (groupId: string) => {
+  const db = getDatabase();
+  const groupRef = ref(db, `groups/${groupId}/joinedUsers`);
+  const getUsersArr = get(groupRef);
+  const usersArr_str: string = (await getUsersArr).val();
+
+  if (usersArr_str === null) {
+    set(
+      groupRef,
+      JSON.stringify([
+        { userId: Cookies.get("userId"), name: Cookies.get("name") },
+      ])
+    );
+  }
+
+  const usersArr: Array<{ userId: string; name: string }> =
+    JSON.parse(usersArr_str);
+  const me = Cookies.get("userId");
+  if (me) {
+    const meObj = { userId: me, name: Cookies.get("name") };
+    if (!usersArr.find((user) => user.userId === me)) {
+      usersArr.push(meObj);
+      set(groupRef, JSON.stringify(usersArr));
+    }
+  }
+
+  return void 0;
 };
 
 const CheckIfICanRageToday = async (groupId: string): Promise<boolean> => {
@@ -172,6 +216,10 @@ const GameModal: React.FC<Props> = ({
       enabled: false,
       genres: [],
     },
+    randomAdditionalThemes: {
+      enabled: true,
+      additionalThemes: [],
+    },
     sceneIndex: 0,
     timeLimitMin: 30,
     gameStarted: false,
@@ -182,6 +230,9 @@ const GameModal: React.FC<Props> = ({
   const [currentTime, setCurrentTime] = useState<number | null>(null);
   const [uploadedMusics, setUploadedMusics] = useState<UploadedMusic[]>([]);
   const [isUploadMusicModalOpen, setIsUploadMusicModalOpen] = useState(false);
+  const [isGameSettingsModalOpen, setIsGameSettingsModalOpen] = useState(false);
+  const [isAdditionalThemeModalOpen, setIsAdditionalThemeModalOpen] =
+    useState(false);
 
   const viewState = {
     gameComponentSelector: (gameMode: GameModeEnum) => {
@@ -239,6 +290,12 @@ const GameModal: React.FC<Props> = ({
       }
     });
     const TimeLimitRef = ref(db, `groups/${groupId}/timeLimit`);
+    get(TimeLimitRef).then((snapshot) => {
+      const timeLimit = snapshot.val();
+      if (timeLimit) {
+        setCurrentTime(timeLimit);
+      }
+    });
     onValue(TimeLimitRef, (snapshot) => {
       const timeLimit = snapshot.val();
       if (timeLimit) {
@@ -266,6 +323,8 @@ const GameModal: React.FC<Props> = ({
         });
       }
     });
+    // notify
+    MeJoinGroupCall(group.groupId);
 
     return () => {
       off(gameSettingsRef);
@@ -448,6 +507,17 @@ const GameModal: React.FC<Props> = ({
                           );
                         }}
                       />
+                      <HackyButton
+                        name={"⚙ game settings"}
+                        mode={"light"}
+                        isDisabled={!viewState.isMeAdmin()}
+                        style={{
+                          marginLeft: "1rem",
+                        }}
+                        onClick={() => {
+                          setIsGameSettingsModalOpen(true);
+                        }}
+                      />
                     </div>
                   </div>
                   <Devider />
@@ -479,8 +549,20 @@ const GameModal: React.FC<Props> = ({
                         }}
                       >
                         <HackyButton
-                          name={"+ 10 min"}
-                          prefer={true}
+                          name={"check additional theme"}
+                          onClick={() => {
+                            setIsAdditionalThemeModalOpen(true);
+                          }}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          marginTop: "0.8rem",
+                          marginLeft: "1rem",
+                        }}
+                      >
+                        <HackyButton
+                          name={"add 10 min"}
                           isDisabled={!viewState.isMeAdmin()}
                           style={{
                             marginRight: "0rem",
@@ -601,6 +683,32 @@ const GameModal: React.FC<Props> = ({
                                   </div>
                                 </div>
                               )}
+                              {userAdditionalList(
+                                music.idUploadedBy,
+                                gameSettings
+                              ).map((adTheme, index) => {
+                                return (
+                                  <div
+                                    key={adTheme.toName + index}
+                                    style={{
+                                      marginTop: "16px",
+                                      marginBottom: "-16px",
+                                      marginLeft: "24px",
+                                    }}
+                                  >
+                                    <div
+                                      style={{
+                                        marginLeft: "8px",
+                                        width: "auto",
+                                        textDecoration: "underline",
+                                      }}
+                                    >
+                                      💨 required theme
+                                      {adTheme.content}
+                                    </div>
+                                  </div>
+                                );
+                              })}
                               <ResultMusicPlayer
                                 music={music}
                                 index={index}
@@ -654,7 +762,6 @@ const GameModal: React.FC<Props> = ({
         </div>
         <div style={{ height: "100vh" }} />
       </Drawer>
-
       <ShareGroupIdModal
         gameSettings={gameSettings}
         setGameSettings={setGameSettings}
@@ -662,11 +769,25 @@ const GameModal: React.FC<Props> = ({
         isGroupIdModalOpen={isGroupIdModalOpen}
         setIsGroupIdModalOpen={setIsGroupIdModalOpen}
       />
-
       <MusicUploadModal
         group={group}
         isModalOpen={isUploadMusicModalOpen}
         setIsModalOpen={setIsUploadMusicModalOpen}
+      />
+      <GameSettingsModal
+        gameSettings={gameSettings}
+        setGameSettings={setGameSettings}
+        isModalOpen={isGameSettingsModalOpen}
+        setIsModalOpen={setIsGameSettingsModalOpen}
+      />
+
+      <AdditionalThemeModal
+        group={group}
+        gameSettings={gameSettings}
+        setGameSettings={setGameSettings}
+        isModalOpen={isAdditionalThemeModalOpen}
+        setIsModalOpen={setIsAdditionalThemeModalOpen}
+        currentTime={currentTime}
       />
     </div>
   );

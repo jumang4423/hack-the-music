@@ -1,7 +1,7 @@
 import { ThemeRepository } from "./interface/repository.usecase";
 import ErrStr from "../../domain/ErrStr.domain";
 import { ErrsEnumeration } from "../../util/err.util";
-import { Theme } from "../../generated/graphql";
+import { Theme, AdditionalTheme } from "../../generated/graphql";
 import { Maybe } from "graphql/jsutils/Maybe";
 
 export class ThemeInteractor {
@@ -40,6 +40,19 @@ export class ThemeInteractor {
     this.err = err;
   };
 
+  handleGetRandomAdditionalTheme = async (args: {
+    toUserId: string;
+    toName: string;
+  }) => {
+    const { toUserId, toName } = args;
+    const [theme, err] = await this.themeRepository.getRandomAdditionalTheme(
+      toUserId,
+      toName
+    );
+    this.response = theme;
+    this.err = err;
+  };
+
   getResponseUploadTheme = (): Theme => {
     if (this.err.IsError()) {
       throw new Error(this.err.GetError());
@@ -48,6 +61,13 @@ export class ThemeInteractor {
   };
 
   getResponseGetRandomTheme = (): Theme => {
+    if (this.err.IsError()) {
+      throw new Error(this.err.GetError());
+    }
+    return this.response!;
+  };
+
+  getResponseGetRandomAdditionalTheme = (): AdditionalTheme => {
     if (this.err.IsError()) {
       throw new Error(this.err.GetError());
     }
