@@ -14,6 +14,8 @@ import { RemoveAllCookies } from "../fun/removeAllCookie";
 import { getAuth, signOut } from "firebase/auth";
 import ResultMusicPlayer from "./ResultMusicPlayer";
 import Messanger from "./Messanger";
+import { useEnterSound } from "../fun/useEnterSound";
+import GlobalSettingModal from "./GlobalSettingModal";
 import {
   getDatabase,
   ref,
@@ -25,7 +27,7 @@ import {
   onChildChanged,
 } from "firebase/database";
 import { IsMeAdminRn } from "../fun/isMeAdminRn";
-import { RandomId } from "../fun/randomId";
+import { useNoticeSound } from "../fun/useNoticeSound";
 import MusicUploadModal from "./MusicUploadModal";
 
 // @ts-ignore
@@ -192,6 +194,8 @@ const GameModal: React.FC<Props> = ({
   setGroup,
   isNewUser,
 }) => {
+  const onChimePlay = useNoticeSound();
+  const onEnterPlay = useEnterSound();
   const [gameSettings, setGameSettings] = useState<ChaosGameSettingsType>({
     randomTheme: {
       enabled: true,
@@ -224,7 +228,6 @@ const GameModal: React.FC<Props> = ({
     timeLimitMin: 30,
     gameStarted: false,
     gameEnded: false,
-    newGroupId: "",
   });
   const [isGroupIdModalOpen, setIsGroupIdModalOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState<number | null>(null);
@@ -232,6 +235,8 @@ const GameModal: React.FC<Props> = ({
   const [isUploadMusicModalOpen, setIsUploadMusicModalOpen] = useState(false);
   const [isGameSettingsModalOpen, setIsGameSettingsModalOpen] = useState(false);
   const [isAdditionalThemeModalOpen, setIsAdditionalThemeModalOpen] =
+    useState(false);
+  const [isGlobalSettingModalOpen, setIsGlobalSettingModalOpen] =
     useState(false);
 
   const viewState = {
@@ -325,6 +330,7 @@ const GameModal: React.FC<Props> = ({
     });
     // notify
     MeJoinGroupCall(group.groupId);
+    onEnterPlay();
 
     return () => {
       off(gameSettingsRef);
@@ -380,10 +386,9 @@ const GameModal: React.FC<Props> = ({
     if (currentTime <= 0) {
       const newGameSettings = Object.assign({}, gameSettings);
       newGameSettings.gameEnded = true;
-      const newRandomId = RandomId();
-      newGameSettings.newGroupId = newRandomId;
       setGameSettings(newGameSettings);
-      // おわり
+      onChimePlay();
+      // おわりno chime
     }
   }, [currentTime]);
 
@@ -448,14 +453,13 @@ const GameModal: React.FC<Props> = ({
                   }}
                 >
                   <HackyButton
-                    prefer={true}
-                    name={"leave"}
+                    name={"⚙"}
                     mode={"light"}
                     style={{
                       marginRight: "1rem",
                     }}
                     onClick={() => {
-                      refresh();
+                      setIsGlobalSettingModalOpen(true);
                     }}
                   />
                   <HackyButton
@@ -465,6 +469,17 @@ const GameModal: React.FC<Props> = ({
                     }}
                     onClick={() => {
                       ToRageQuit(group.groupId);
+                    }}
+                  />
+                  <HackyButton
+                    prefer={true}
+                    name={"leave"}
+                    mode={"light"}
+                    style={{
+                      marginRight: "1rem",
+                    }}
+                    onClick={() => {
+                      refresh();
                     }}
                   />
                 </div>
@@ -550,6 +565,10 @@ const GameModal: React.FC<Props> = ({
                       >
                         <HackyButton
                           name={"check additional theme"}
+                          isDisabled={
+                            gameSettings.randomAdditionalThemes.additionalThemes
+                              .length == 0
+                          }
                           onClick={() => {
                             setIsAdditionalThemeModalOpen(true);
                           }}
@@ -788,6 +807,10 @@ const GameModal: React.FC<Props> = ({
         isModalOpen={isAdditionalThemeModalOpen}
         setIsModalOpen={setIsAdditionalThemeModalOpen}
         currentTime={currentTime}
+      />
+      <GlobalSettingModal
+        modalOpen={isGlobalSettingModalOpen}
+        setModalOpen={setIsGlobalSettingModalOpen}
       />
     </div>
   );

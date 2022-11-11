@@ -31,5 +31,4 @@ export type ChaosGameSettingsType = {
   timeLimitMin: number;
   gameStarted: boolean;
   gameEnded: boolean;
-  newGroupId: string;
 };

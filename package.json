@@ -25,7 +25,9 @@
     "react-cookie": "^4.1.1",
     "react-dom": "^18.2.0",
     "react-file-picker": "^0.0.6",
+    "react-player": "^2.11.0",
     "react-router-dom": "^6.4.2",
+    "recoil": "^0.7.6",
     "use-sound": "^4.0.1"
   },
   "devDependencies": {

@@ -9,6 +9,7 @@ import Page404 from "./pages/Page404";
 import { createTheme } from "@mui/material/styles";
 import { lightGreen, yellow } from "@mui/material/colors";
 import { ThemeProvider } from "@mui/material/styles";
+import { RecoilRoot, useRecoilState } from "recoil";
 
 const localURL = "http://localhost:4000/graphql";
 const prodURL = "https://htm-backend.onrender.com/graphql";
@@ -31,21 +32,23 @@ const theme = createTheme({
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
-      <CookiesProvider>
-        <ThemeProvider theme={theme}>
-          <BrowserRouter>
-            <link
-              href="https://pvinis.github.io/iosevka-webfont/3.4.1/iosevka.css"
-              rel="stylesheet"
-            />
-            <Routes>
-              <Route index element={<App />} />
-              <Route path={"*"} element={<Page404 />} />
-            </Routes>
-          </BrowserRouter>
-        </ThemeProvider>
-      </CookiesProvider>
-    </ApolloProvider>
+    <RecoilRoot>
+      <ApolloProvider client={client}>
+        <CookiesProvider>
+          <ThemeProvider theme={theme}>
+            <BrowserRouter>
+              <link
+                href="https://pvinis.github.io/iosevka-webfont/3.4.1/iosevka.css"
+                rel="stylesheet"
+              />
+              <Routes>
+                <Route index element={<App />} />
+                <Route path={"*"} element={<Page404 />} />
+              </Routes>
+            </BrowserRouter>
+          </ThemeProvider>
+        </CookiesProvider>
+      </ApolloProvider>
+    </RecoilRoot>
   </React.StrictMode>
 );

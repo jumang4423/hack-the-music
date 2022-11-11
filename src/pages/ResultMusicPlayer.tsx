@@ -1,5 +1,6 @@
 import { UploadedMusic } from "./GameModal";
 import HitMusicPlayer from "../components/HitMusicPlayer";
+import Downloader from "../components/Downloader";
 import { getDatabase, ref, set } from "firebase/database";
 import { Group } from "../gql/graphql";
 
@@ -24,7 +25,7 @@ const ResultMusicPlayer = ({ music, index, group }: Props) => {
           marginBottom: "-18px",
         }}
       >
-        <HitMusicPlayer url={music.url} />
+        <Downloader url={music.url} />
 
         <div
           style={{

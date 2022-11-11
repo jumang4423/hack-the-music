@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { GET_RANDOM_ADDITIONAL_THEME } from "../fun/apis";
 import { Group } from "../gql/graphql";
 import * as database from "firebase/database";
+import { useNoticeSound } from "../fun/useNoticeSound";
 
 type Props = {
   group: Group;
@@ -23,8 +24,10 @@ const AdditionalThemeModal = ({
   isModalOpen,
   setIsModalOpen,
 }: Props) => {
+  const onChimePlay = useNoticeSound();
   const [GetAdditionalTheme] = useMutation(GET_RANDOM_ADDITIONAL_THEME, {
     onCompleted({ randomAdditionalTheme }) {
+      onChimePlay();
       setGameSettings({
         ...gameSettings,
         randomAdditionalThemes: {
@@ -42,7 +45,6 @@ const AdditionalThemeModal = ({
     const ref = database.ref(db, `groups/${group.groupId}/joinedUsers`);
     const joinedUsers = await database.get(ref);
     const joinedUsersData = JSON.parse(joinedUsers.val());
-
     const randomUser =
       joinedUsersData[Math.floor(Math.random() * joinedUsersData.length)];
 
@@ -60,8 +62,9 @@ const AdditionalThemeModal = ({
       currentTime !== null &&
       gameSettings.randomAdditionalThemes.enabled &&
       currentTime !== 0 &&
+      currentTime !== -1 &&
       currentTime !== 60 * gameSettings.timeLimitMin &&
-      currentTime % 10 === 0
+      currentTime % 600 === 0
     ) {
       onGetTheme();
     }

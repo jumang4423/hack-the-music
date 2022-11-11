@@ -1,11 +1,14 @@
 import { useSound } from "use-sound";
+import { useRecoilState } from "recoil";
+import { VolumeAtom } from "../recoil/volumeAtom";
 
 type PlayerProps = {
   url: string | string[];
 };
 
 const HitMusicPlayer = ({ url }: PlayerProps) => {
-  const [play, { stop }] = useSound(url, { volume: 0.5 });
+  const [volume] = useRecoilState(VolumeAtom);
+  const [play, { stop }] = useSound(url, { volume });
 
   return (
     <div

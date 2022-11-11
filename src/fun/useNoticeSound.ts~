@@ -1,0 +1,11 @@
+import { useSound } from "use-sound";
+PlayFunction;
+import type { PlayFunction } from "use-sound";
+import { useRecoilState } from "recoil";
+import { VolumeAtom } from "../recoil/volumeAtom";
+
+export const useNoticeSound = (): PlayFunction => {
+  const [volume] = useRecoilState(VolumeAtom);
+  const [play] = useSound("/chime.mp3", { volume });
+  return play;
+};
