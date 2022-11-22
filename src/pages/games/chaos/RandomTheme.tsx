@@ -28,7 +28,7 @@ const RandomTheme = ({ gameSettings, setGameSettings, group }: Props) => {
       RandomThemeDataHandle(randomTheme, gameSettings, setGameSettings);
     },
   });
-  const [cookies, setCookie, removeCookie] = useCookies();
+  const [cookies] = useCookies();
   const [open, setOpen] = useState(false);
   const handleClose = () => {
     setOpen(false);

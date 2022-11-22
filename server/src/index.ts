@@ -5,7 +5,10 @@ import { AuthMiddleware } from "./infrastructure/auth.middleware";
 
 const app = express();
 app.use(AuthMiddleware);
-ApolloMiddleware.applyMiddleware({ app, cors: true });
+ApolloMiddleware.applyMiddleware({
+  app,
+  cors: true,
+});
 
 app.listen(ServerConf.PORT, () => {
   console.log(`Listening at http://localhost:${ServerConf.PORT}/graphql`);

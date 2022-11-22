@@ -56,14 +56,17 @@ const AdditionalThemeModal = ({
     });
     setIsModalOpen(true);
   };
+
   useEffect(() => {
     // um, basically this does call additional theme modal every 10 minutes
+    // TODO: and you know, this is terrifying code
     if (
-      currentTime !== null &&
       gameSettings.randomAdditionalThemes.enabled &&
-      currentTime !== 0 &&
-      currentTime !== -1 &&
       currentTime !== 60 * gameSettings.timeLimitMin &&
+      !gameSettings.gameEnded &&
+      currentTime !== null &&
+      currentTime !== -1 &&
+      currentTime !== 0 &&
       currentTime % 600 === 0
     ) {
       onGetTheme();
@@ -96,7 +99,7 @@ const AdditionalThemeModal = ({
             (additionalTheme, index) => (
               <div key={additionalTheme.content + index}>
                 {additionalTheme.toName}
-                {" <- "}
+                {" got "}
                 {additionalTheme.content}
               </div>
             )
